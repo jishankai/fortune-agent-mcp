@@ -1,0 +1,33 @@
+{
+  "name": "iztro-mcp-service",
+  "version": "1.0.0",
+  "description": "紫微斗数星盘计算 MCP 服务",
+  "main": "src/stdio-server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/http-server.js",
+    "start:stdio": "node src/stdio-server.js",
+    "dev": "node --watch src/http-server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "mcp",
+    "astrology",
+    "iztro",
+    "紫微斗数",
+    "claude-code"
+  ],
+  "author": "Claude Code MCP Service",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "iztro": "^2.5.3",
+    "lunar-javascript": "^1.6.12",
+    "zod": "^3.25.76"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

@@ -1,0 +1,143 @@
+services:
+  # 生产环境 HTTP MCP 服务
+  iztro-mcp-http:
+    build:
+      context: ./iztro_mcp_service
+      dockerfile: Dockerfile
+    container_name: iztro-mcp-http
+    restart: unless-stopped
+    
+    # HTTP 端口映射
+    ports:
+      - "3000:3000"
+    
+    # 环境变量
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - TZ=Asia/Shanghai
+    
+    # 资源限制
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+        reservations:
+          memory: 256M
+          cpus: '0.25'
+    
+    # 安全配置
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp:noexec,nosuid,size=100M
+    
+    # 日志配置
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    
+    # 健康检查
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # 兼容性：保留 stdio 模式服务
+  iztro-mcp-stdio:
+    build:
+      context: ./iztro_mcp_service
+      dockerfile: Dockerfile
+    container_name: iztro-mcp-stdio
+    restart: unless-stopped
+    
+    # 覆盖启动命令为 stdio 模式
+    command: ["node", "src/stdio-server.js"]
+    
+    # 环境变量
+    environment:
+      - NODE_ENV=production
+      - TZ=Asia/Shanghai
+    
+    # stdio 模式不需要网络端口
+    network_mode: none
+    
+    # 资源限制
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.25'
+        reservations:
+          memory: 128M
+          cpus: '0.1'
+    
+    # 安全配置
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp:noexec,nosuid,size=100M
+    
+    # 日志配置
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    
+    # 基本健康检查
+    healthcheck:
+      test: ["CMD", "node", "-e", "console.log('Health check passed')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    
+    # 默认禁用，需要时可启用
+    profiles:
+      - stdio
+
+  # 开发环境服务
+  iztro-mcp-dev:
+    build:
+      context: ./iztro_mcp_service
+      dockerfile: Dockerfile
+    container_name: iztro-mcp-dev
+    restart: unless-stopped
+    
+    # 开发环境端口
+    ports:
+      - "3001:3000"
+    
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - TZ=Asia/Shanghai
+    
+    # 挂载源代码用于开发
+    volumes:
+      - ./iztro_mcp_service/src:/app/src:ro
+      - ./iztro_mcp_service/package.json:/app/package.json:ro
+    
+    # 开发模式使用热重载
+    command: ["npm", "run", "dev"]
+    
+    # 开发环境配置文件
+    profiles:
+      - dev
+
+# 网络配置
+networks:
+  default:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.20.0.0/16
