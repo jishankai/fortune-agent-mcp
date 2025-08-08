@@ -175,6 +175,7 @@ export async function analyzeRelationships({ astrolabe_data, analysis_type }) {
       default:
         throw new Error(`不支持的分析类型: ${analysis_type}`);
     }
+    console.log('分析结果:', analysis);
 
     return {
       content: [
@@ -482,15 +483,1034 @@ function identifySpecialPatterns(astrolabeData) {
 
 // 三方四正分析
 function analyzeTriangularRelationships(astrolabeData) {
-  const analysis = {
-    career_triangle: '事业三方（官禄、财帛、田宅）',
-    life_triangle: '命身三方（命宫、财帛、迁移）',
-    relationship_triangle: '感情三方（夫妻、子女、父母）'
+  try {
+    const palaces = getPalaceData(astrolabeData);
+    if (!palaces || palaces.length === 0) {
+      throw new Error('无效的宫位数据');
+    }
+
+    const analysis = {
+      summary: '三方四正关系分析：通过分析相关宫位的星曜配置，了解各领域的综合运势',
+      triangular_patterns: analyzeTriangularPatterns(palaces),
+      square_relationships: analyzeSquareRelationships(palaces),
+      power_distribution: analyzePowerDistribution(palaces),
+      fortune_flow: analyzeFortuneFlow(palaces),
+      comprehensive_score: calculateComprehensiveScore(palaces)
+    };
+
+    return analysis;
+  } catch (error) {
+    return {
+      summary: '三方四正分析遇到错误',
+      error: error.message,
+      triangular_patterns: [],
+      square_relationships: [],
+      power_distribution: {},
+      fortune_flow: {},
+      comprehensive_score: 0
+    };
+  }
+}
+
+// 获取宫位数据的统一函数
+function getPalaceData(astrolabeData) {
+  if (astrolabeData.palace_data) {
+    return astrolabeData.palace_data;
+  } else if (astrolabeData.astrolabe && astrolabeData.astrolabe.palaces) {
+    return astrolabeData.astrolabe.palaces;
+  } else if (astrolabeData.palaces) {
+    return astrolabeData.palaces;
+  }
+  return [];
+}
+
+// 分析三方关系模式
+function analyzeTriangularPatterns(palaces) {
+  const triangularSets = [
+    {
+      name: '命身三方',
+      description: '决定个人基本运势和性格的核心三角',
+      palaces: ['命宫', '财帛', '迁移'],
+      focus: '个人发展、财运、外在表现'
+    },
+    {
+      name: '事业三方', 
+      description: '影响事业发展和财富积累的重要三角',
+      palaces: ['官禄', '财帛', '田宅'],
+      focus: '事业成就、收入来源、资产积累'
+    },
+    {
+      name: '感情三方',
+      description: '关系到婚姻感情和家庭和谐的情感三角', 
+      palaces: ['夫妻', '子女', '父母'],
+      focus: '夫妻关系、子女缘分、长辈关系'
+    },
+    {
+      name: '健康三方',
+      description: '身心健康和精神状态的三角关系',
+      palaces: ['疾厄', '父母', '兄弟'],
+      focus: '身体健康、精神状态、人际支持'
+    }
+  ];
+
+  return triangularSets.map(set => {
+    const palaceAnalysis = set.palaces.map(palaceName => {
+      const palace = palaces.find(p => p.name === palaceName);
+      if (!palace) {
+        return {
+          name: palaceName,
+          stars: [],
+          major_stars: [],
+          minor_stars: [],
+          tough_stars: [],
+          analysis: '宫位不存在或数据缺失',
+          score: 0
+        };
+      }
+      return analyzeSinglePalace(palace, palaceName);
+    }).filter(p => p !== null);
+
+    const combinedScore = calculateTriangleScore(palaceAnalysis);
+    const starInteraction = analyzeStarInteractions(palaceAnalysis);
+    const strengthAnalysis = analyzeTriangleStrength(palaceAnalysis);
+
+    return {
+      ...set,
+      palace_analysis: palaceAnalysis,
+      combined_score: combinedScore,
+      strength_level: strengthAnalysis.level,
+      star_interactions: starInteraction,
+      interpretation: generateTriangleInterpretation(set.name, combinedScore, starInteraction),
+      recommendations: generateTriangleRecommendations(set.name, strengthAnalysis)
+    };
+  });
+}
+
+// 分析四正关系
+function analyzeSquareRelationships(palaces) {
+  const squareAnalysis = [];
+  
+  // 十二宫位的对宫关系
+  const oppositeMap = {
+    '命宫': '迁移', '迁移': '命宫',
+    '兄弟': '奴仆', '奴仆': '兄弟', 
+    '夫妻': '官禄', '官禄': '夫妻',
+    '子女': '田宅', '田宅': '子女',
+    '财帛': '福德', '福德': '财帛',
+    '疾厄': '父母', '父母': '疾厄'
+  };
+
+  // 分析每个宫位的四正关系
+  palaces.forEach(palace => {
+    const oppositePalaceName = oppositeMap[palace.name];
+    const oppositePalace = palaces.find(p => p.name === oppositePalaceName);
+    
+    const mainAnalysis = analyzeSinglePalace(palace, palace.name);
+    let oppositeAnalysis;
+    
+    if (oppositePalace) {
+      oppositeAnalysis = analyzeSinglePalace(oppositePalace, oppositePalaceName);
+    } else {
+      oppositeAnalysis = {
+        name: oppositePalaceName,
+        stars: [],
+        major_stars: [],
+        minor_stars: [],
+        tough_stars: [],
+        analysis: '对宫数据缺失，无法进行完整分析',
+        score: 0
+      };
+    }
+    
+    const relationship = {
+      main_palace: {
+        name: palace.name,
+        analysis: mainAnalysis
+      },
+      opposite_palace: {
+        name: oppositePalaceName,
+        analysis: oppositeAnalysis
+      },
+      interaction_score: calculateOppositeInteraction(mainAnalysis, oppositeAnalysis),
+      balance_analysis: analyzeOppositeBalance(mainAnalysis, oppositeAnalysis),
+      conflict_resolution: generateConflictResolution(palace.name, oppositePalaceName, mainAnalysis, oppositeAnalysis)
+    };
+    
+    squareAnalysis.push(relationship);
+  });
+
+  return squareAnalysis;
+}
+
+// 分析单个宫位
+function analyzeSinglePalace(palace, palaceName) {
+  const majorStars = extractStars(palace, 'major');
+  const minorStars = extractStars(palace, 'soft');
+  const toughStars = extractStars(palace, 'tough');
+  
+  return {
+    palace_name: palaceName,
+    major_stars: majorStars,
+    minor_stars: minorStars,
+    tough_stars: toughStars,
+    strength: analyzePalaceStrength(palace),
+    star_quality: calculateStarQuality(majorStars, minorStars, toughStars),
+    mutagen_effects: extractMutagens(palace),
+    dominant_element: getDominantElement(majorStars)
+  };
+}
+
+// 计算三方分数
+function calculateTriangleScore(palaceAnalysis) {
+  let totalScore = 0;
+  let validPalaces = 0;
+
+  palaceAnalysis.forEach(palace => {
+    if (palace && palace.strength && typeof palace.strength.score === 'number') {
+      totalScore += palace.strength.score;
+      validPalaces++;
+    }
+  });
+
+  return validPalaces > 0 ? Math.round(totalScore / validPalaces * 10) / 10 : 0;
+}
+
+// 分析星曜相互作用
+function analyzeStarInteractions(palaceAnalysis) {
+  const allMajorStars = [];
+  const interactions = [];
+
+  palaceAnalysis.forEach(palace => {
+    if (palace && palace.major_stars) {
+      palace.major_stars.forEach(star => {
+        allMajorStars.push({
+          star: star.name,
+          palace: palace.palace_name,
+          brightness: star.brightness,
+          mutagen: star.mutagen || ''
+        });
+      });
+    }
+  });
+
+  // 寻找特殊星曜组合
+  const starCombinations = findStarCombinations(allMajorStars);
+  const mutagenInteractions = analyzeMutagenInteractions(allMajorStars);
+  const brightnessHarmony = analyzeBrightnessHarmony(allMajorStars);
+
+  return {
+    total_major_stars: allMajorStars.length,
+    special_combinations: starCombinations,
+    mutagen_interactions: mutagenInteractions,
+    brightness_harmony: brightnessHarmony,
+    overall_harmony: calculateOverallHarmony(starCombinations, mutagenInteractions, brightnessHarmony)
+  };
+}
+
+// 寻找特殊星曜组合
+function findStarCombinations(stars) {
+  const combinations = [];
+  
+  // 君臣庆会格
+  const emperorStars = stars.filter(s => ['紫微', '天府', '太阳', '太阴'].includes(s.star));
+  const ministerStars = stars.filter(s => ['天机', '天梁', '天相', '巨门'].includes(s.star));
+  
+  if (emperorStars.length >= 2 && ministerStars.length >= 1) {
+    combinations.push({
+      name: '君臣庆会格',
+      description: '帝王星与重臣星聚会，主贵气十足',
+      level: '上格',
+      involved_stars: [...emperorStars.map(s => s.star), ...ministerStars.map(s => s.star)]
+    });
+  }
+
+  // 杀破狼格局
+  const killerStars = stars.filter(s => ['七杀', '破军', '贪狼'].includes(s.star));
+  if (killerStars.length >= 2) {
+    combinations.push({
+      name: '杀破狼格局',
+      description: '开创变化之格，主变动和机遇',
+      level: '变格',
+      involved_stars: killerStars.map(s => s.star)
+    });
+  }
+
+  // 机月同梁格
+  const wisdomStars = stars.filter(s => ['天机', '太阴', '天同', '天梁'].includes(s.star));
+  if (wisdomStars.length >= 3) {
+    combinations.push({
+      name: '机月同梁格',
+      description: '智慧慈祥之格，主文贵和福气',
+      level: '福格',
+      involved_stars: wisdomStars.map(s => s.star)
+    });
+  }
+
+  return combinations;
+}
+
+// 分析四化相互作用
+function analyzeMutagenInteractions(stars) {
+  const mutagenStars = stars.filter(s => s.mutagen && s.mutagen !== '');
+  const mutagenCount = {
+    '禄': mutagenStars.filter(s => s.mutagen === '禄').length,
+    '权': mutagenStars.filter(s => s.mutagen === '权').length,
+    '科': mutagenStars.filter(s => s.mutagen === '科').length,
+    '忌': mutagenStars.filter(s => s.mutagen === '忌').length
+  };
+
+  const interactions = [];
+
+  // 三奇嘉会
+  if (mutagenCount['禄'] >= 1 && mutagenCount['权'] >= 1 && mutagenCount['科'] >= 1) {
+    interactions.push({
+      name: '三奇嘉会',
+      description: '禄权科三化齐聚，主富贵双全',
+      type: '大吉',
+      effect: '增强整体运势，名利双收'
+    });
+  }
+
+  // 权忌相冲
+  if (mutagenCount['权'] >= 1 && mutagenCount['忌'] >= 1) {
+    interactions.push({
+      name: '权忌相冲',
+      description: '化权与化忌同现，主冲突与变化',
+      type: '冲突',
+      effect: '易有权力斗争，但也有突破机会'
+    });
+  }
+
+  return {
+    mutagen_distribution: mutagenCount,
+    special_interactions: interactions,
+    harmony_level: calculateMutagenHarmony(mutagenCount)
+  };
+}
+
+// 计算四化和谐度
+function calculateMutagenHarmony(mutagenCount) {
+  const total = Object.values(mutagenCount).reduce((sum, count) => sum + count, 0);
+  if (total === 0) return 'neutral';
+  
+  const ratio = {
+    positive: (mutagenCount['禄'] + mutagenCount['权'] + mutagenCount['科']) / total,
+    negative: mutagenCount['忌'] / total
   };
   
-  // 这里可以添加更详细的三方四正分析逻辑
+  if (ratio.positive >= 0.8) return 'very_positive';
+  if (ratio.positive >= 0.6) return 'positive';  
+  if (ratio.negative >= 0.6) return 'challenging';
+  return 'balanced';
+}
+
+// 分析亮度和谐
+function analyzeBrightnessHarmony(stars) {
+  const brightnessMap = {
+    '庙': 5, '旺': 4, '得': 3, '利': 2, '平': 1, '不': -1, '陷': -2
+  };
   
-  return analysis;
+  let totalScore = 0;
+  let count = 0;
+  
+  stars.forEach(star => {
+    if (star.brightness && brightnessMap[star.brightness] !== undefined) {
+      totalScore += brightnessMap[star.brightness];
+      count++;
+    }
+  });
+  
+  const averageScore = count > 0 ? totalScore / count : 0;
+  
+  let harmonyLevel;
+  if (averageScore >= 3.5) harmonyLevel = 'excellent';
+  else if (averageScore >= 2) harmonyLevel = 'good';
+  else if (averageScore >= 0) harmonyLevel = 'fair';
+  else harmonyLevel = 'challenging';
+  
+  return {
+    average_brightness: averageScore,
+    harmony_level: harmonyLevel,
+    total_stars: count,
+    distribution: calculateBrightnessDistribution(stars)
+  };
+}
+
+// 计算亮度分布
+function calculateBrightnessDistribution(stars) {
+  const distribution = { '庙': 0, '旺': 0, '得': 0, '利': 0, '平': 0, '不': 0, '陷': 0 };
+  
+  stars.forEach(star => {
+    if (star.brightness && distribution.hasOwnProperty(star.brightness)) {
+      distribution[star.brightness]++;
+    }
+  });
+  
+  return distribution;
+}
+
+// 计算整体和谐度
+function calculateOverallHarmony(combinations, mutagenInteractions, brightnessHarmony) {
+  let score = 0;
+  
+  // 特殊组合加分
+  combinations.forEach(combo => {
+    if (combo.level === '上格') score += 3;
+    else if (combo.level === '福格') score += 2;
+    else if (combo.level === '变格') score += 1;
+  });
+  
+  // 四化和谐度
+  switch (mutagenInteractions.harmony_level) {
+    case 'very_positive': score += 3; break;
+    case 'positive': score += 2; break;
+    case 'balanced': score += 1; break;
+    case 'challenging': score -= 1; break;
+  }
+  
+  // 亮度和谐度
+  switch (brightnessHarmony.harmony_level) {
+    case 'excellent': score += 2; break;
+    case 'good': score += 1; break;
+    case 'challenging': score -= 1; break;
+  }
+  
+  if (score >= 6) return 'excellent';
+  if (score >= 4) return 'very_good';
+  if (score >= 2) return 'good';
+  if (score >= 0) return 'fair';
+  return 'challenging';
+}
+
+// 分析三方强度
+function analyzeTriangleStrength(palaceAnalysis) {
+  let totalStrength = 0;
+  let validPalaces = 0;
+  
+  palaceAnalysis.forEach(palace => {
+    if (palace && palace.strength && typeof palace.strength.score === 'number') {
+      totalStrength += palace.strength.score;
+      validPalaces++;
+    }
+  });
+  
+  const averageStrength = validPalaces > 0 ? totalStrength / validPalaces : 0;
+  
+  let level, description;
+  if (averageStrength >= 4) {
+    level = '极强';
+    description = '三方星曜配置极佳，各方面都有很好的发展潜力';
+  } else if (averageStrength >= 2) {
+    level = '较强';
+    description = '三方星曜配置良好，有不错的发展机会';
+  } else if (averageStrength >= 0) {
+    level = '中等';
+    description = '三方星曜配置平平，需要通过努力来改善';
+  } else if (averageStrength >= -2) {
+    level = '较弱';
+    description = '三方星曜配置较弱，需要特别注意相关方面的发展';
+  } else {
+    level = '极弱';
+    description = '三方星曜配置不佳，该方面发展困难较大';
+  }
+  
+  return {
+    level: level,
+    score: averageStrength,
+    description: description,
+    valid_palaces: validPalaces
+  };
+}
+
+// 生成三方解释
+function generateTriangleInterpretation(triangleName, score, interactions) {
+  const baseInterpretations = {
+    '命身三方': {
+      high: '个人运势强劲，具备良好的发展基础和外在机遇，财运亨通',
+      medium: '个人发展机会适中，需要积极把握外在环境带来的机会',
+      low: '个人发展面临一些挑战，需要加强自身能力建设并谨慎理财'
+    },
+    '事业三方': {
+      high: '事业运势极佳，官禄地位稳固，财源广进，适合投资置业',
+      medium: '事业发展平稳，收入稳定，可适度投资但需谨慎',
+      low: '事业发展阻力较大，收入不稳，宜保守理财避免大额投资'
+    },
+    '感情三方': {
+      high: '感情生活和谐美满，家庭关系融洽，子女孝顺，长辈慈爱',
+      medium: '感情关系总体稳定，偶有波折但可以化解',
+      low: '感情方面需要更多经营，家庭关系需要用心维护'
+    },
+    '健康三方': {
+      high: '身心健康状况良好，精神饱满，人际支持充足',
+      medium: '健康状况一般，需要注意保养和人际关系的维护', 
+      low: '健康方面需要特别关注，加强身心调理和寻求支持'
+    }
+  };
+  
+  let scoreLevel;
+  if (score >= 3) scoreLevel = 'high';
+  else if (score >= 0) scoreLevel = 'medium';
+  else scoreLevel = 'low';
+  
+  const baseInterpretation = baseInterpretations[triangleName]?.[scoreLevel] || '需要综合分析具体情况';
+  
+  // 根据星曜互动调整解释
+  let modifiedInterpretation = baseInterpretation;
+  if (interactions.overall_harmony === 'excellent') {
+    modifiedInterpretation += '，星曜配合极佳，发展潜力巨大';
+  } else if (interactions.overall_harmony === 'challenging') {
+    modifiedInterpretation += '，但需要注意星曜冲突带来的挑战';
+  }
+  
+  return modifiedInterpretation;
+}
+
+// 生成三方建议
+function generateTriangleRecommendations(triangleName, strengthAnalysis) {
+  const recommendations = [];
+  
+  const baseRecommendations = {
+    '命身三方': {
+      high: ['充分发挥个人优势', '积极拓展人脉关系', '可考虑更高目标的追求'],
+      medium: ['稳健发展个人事业', '适度拓展社交圈', '保持财务稳健'],
+      low: ['专注提升自身能力', '谨慎处理人际关系', '保守理财避免风险']
+    },
+    '事业三方': {
+      high: ['可考虑创业或投资机会', '积极争取晋升机会', '适时购置不动产'],
+      medium: ['稳步推进事业发展', '适度投资理财', '维护工作关系'],
+      low: ['专注本职工作', '避免高风险投资', '节约开支积累资本']
+    },
+    '感情三方': {
+      high: ['珍惜现有的感情关系', '可考虑扩大家庭', '多关心长辈健康'],
+      medium: ['用心经营感情关系', '平衡家庭和事业', '保持家庭和谐'],
+      low: ['需要更多感情投入', '改善家庭沟通', '寻求专业帮助化解矛盾']
+    },
+    '健康三方': {
+      high: ['保持良好的生活习惯', '适度运动增强体质', '多参与社交活动'],
+      medium: ['定期体检预防疾病', '注意劳逸结合', '维护人际关系网'],
+      low: ['及时就医处理健康问题', '减少压力调整心态', '寻求朋友支持']
+    }
+  };
+  
+  let strengthLevel;
+  if (strengthAnalysis.score >= 2) strengthLevel = 'high';
+  else if (strengthAnalysis.score >= 0) strengthLevel = 'medium'; 
+  else strengthLevel = 'low';
+  
+  const applicableRecommendations = baseRecommendations[triangleName]?.[strengthLevel] || ['需要具体分析制定建议'];
+  recommendations.push(...applicableRecommendations);
+  
+  return recommendations;
+}
+
+// 计算对宫相互作用分数
+function calculateOppositeInteraction(mainAnalysis, oppositeAnalysis) {
+  let interactionScore = 0;
+  
+  // 计算星曜强度差异
+  const strengthDiff = Math.abs(
+    (mainAnalysis.strength?.score || 0) - (oppositeAnalysis.strength?.score || 0)
+  );
+  
+  // 强度差异越小，相互作用越和谐
+  if (strengthDiff <= 1) interactionScore += 2;
+  else if (strengthDiff <= 2) interactionScore += 1;
+  else if (strengthDiff >= 4) interactionScore -= 1;
+  
+  // 检查四化相互影响
+  const mainMutagens = mainAnalysis.mutagen_effects || [];
+  const oppositeMutagens = oppositeAnalysis.mutagen_effects || [];
+  
+  mainMutagens.forEach(mutagen => {
+    if (mutagen.mutagen === '禄' || mutagen.mutagen === '权' || mutagen.mutagen === '科') {
+      interactionScore += 1;
+    } else if (mutagen.mutagen === '忌') {
+      interactionScore -= 1;
+    }
+  });
+  
+  oppositeMutagens.forEach(mutagen => {
+    if (mutagen.mutagen === '禄' || mutagen.mutagen === '权' || mutagen.mutagen === '科') {
+      interactionScore += 1;
+    } else if (mutagen.mutagen === '忌') {
+      interactionScore -= 1;
+    }
+  });
+  
+  return Math.max(-5, Math.min(5, interactionScore));
+}
+
+// 分析对宫平衡
+function analyzeOppositeBalance(mainAnalysis, oppositeAnalysis) {
+  const mainStrength = mainAnalysis.strength?.score || 0;
+  const oppositeStrength = oppositeAnalysis.strength?.score || 0;
+  
+  const difference = mainStrength - oppositeStrength;
+  
+  let balanceType, description;
+  
+  if (Math.abs(difference) <= 1) {
+    balanceType = '平衡';
+    description = '两宫位力量均衡，相互支持，发展和谐';
+  } else if (difference > 1) {
+    balanceType = '主强';
+    description = `${mainAnalysis.palace_name}较强，${oppositeAnalysis.palace_name}需要加强`;
+  } else {
+    balanceType = '对强';
+    description = `${oppositeAnalysis.palace_name}较强，${mainAnalysis.palace_name}需要加强`;
+  }
+  
+  return {
+    type: balanceType,
+    difference: difference,
+    description: description,
+    harmony_score: Math.max(0, 5 - Math.abs(difference))
+  };
+}
+
+// 生成冲突化解建议
+function generateConflictResolution(mainPalace, oppositePalace, mainAnalysis, oppositeAnalysis) {
+  const resolutionMap = {
+    '命宫-迁移': {
+      conflict: '个人发展与外在环境的平衡',
+      resolution: [
+        '平衡内在修养与外在拓展',
+        '根据运势选择进退时机',
+        '内外兼修，稳中求进'
+      ]
+    },
+    '财帛-福德': {
+      conflict: '物质追求与精神享受的平衡',
+      resolution: [
+        '在追求财富的同时注重精神生活',
+        '适度消费，享受生活品质',
+        '财富与快乐并重，避免极端'
+      ]
+    },
+    '夫妻-官禄': {
+      conflict: '家庭生活与事业发展的平衡',
+      resolution: [
+        '合理安排工作与家庭时间',
+        '寻求配偶对事业的支持和理解',
+        '事业成功的同时维护婚姻关系'
+      ]
+    },
+    '子女-田宅': {
+      conflict: '子女教育与财产管理的平衡',
+      resolution: [
+        '在子女教育上适度投资',
+        '平衡家庭支出与资产积累',
+        '为子女创造良好的成长环境'
+      ]
+    },
+    '兄弟-奴仆': {
+      conflict: '兄弟朋友与下属关系的协调',
+      resolution: [
+        '公私分明，合理处理各种关系',
+        '维护友谊的同时保持工作原则',
+        '在人际交往中把握分寸'
+      ]
+    },
+    '疾厄-父母': {
+      conflict: '健康状况与长辈关系的影响',
+      resolution: [
+        '关注自身健康的同时孝顺长辈',
+        '从长辈处获得健康养生智慧',
+        '营造和谐的家庭健康环境'
+      ]
+    }
+  };
+  
+  const key = `${mainPalace}-${oppositePalace}`;
+  const reverseKey = `${oppositePalace}-${mainPalace}`;
+  
+  const resolution = resolutionMap[key] || resolutionMap[reverseKey] || {
+    conflict: `${mainPalace}与${oppositePalace}的协调发展`,
+    resolution: ['需要综合分析制定具体化解方案']
+  };
+  
+  return resolution;
+}
+
+// 分析权力分布
+function analyzePowerDistribution(palaces) {
+  const powerAnalysis = {};
+  
+  // 分析各宫位的星曜权重
+  palaces.forEach(palace => {
+    const majorStars = extractStars(palace, 'major');
+    const strength = analyzePalaceStrength(palace);
+    
+    powerAnalysis[palace.name] = {
+      star_count: majorStars.length,
+      strength_score: strength.score || 0,
+      strength_level: strength.level || '未知',
+      dominant_stars: majorStars.slice(0, 2).map(s => s.name)
+    };
+  });
+  
+  // 找出最强的宫位
+  let maxStrength = -Infinity;
+  let strongestPalace = '';
+  
+  Object.entries(powerAnalysis).forEach(([palaceName, analysis]) => {
+    if (analysis.strength_score > maxStrength) {
+      maxStrength = analysis.strength_score;
+      strongestPalace = palaceName;
+    }
+  });
+  
+  return {
+    palace_strengths: powerAnalysis,
+    strongest_palace: strongestPalace,
+    max_strength: maxStrength,
+    power_balance_analysis: analyzePowerBalance(powerAnalysis)
+  };
+}
+
+// 分析权力平衡
+function analyzePowerBalance(powerAnalysis) {
+  const strengths = Object.values(powerAnalysis).map(p => p.strength_score);
+  const average = strengths.reduce((sum, score) => sum + score, 0) / strengths.length;
+  const variance = strengths.reduce((sum, score) => sum + Math.pow(score - average, 2), 0) / strengths.length;
+  
+  let balanceLevel;
+  if (variance <= 1) balanceLevel = '非常平衡';
+  else if (variance <= 4) balanceLevel = '较为平衡';
+  else if (variance <= 9) balanceLevel = '略有偏重';
+  else balanceLevel = '严重失衡';
+  
+  return {
+    balance_level: balanceLevel,
+    average_strength: Math.round(average * 10) / 10,
+    variance: Math.round(variance * 10) / 10,
+    interpretation: generateBalanceInterpretation(balanceLevel, variance)
+  };
+}
+
+// 生成平衡解释
+function generateBalanceInterpretation(balanceLevel, variance) {
+  const interpretations = {
+    '非常平衡': '各宫位发展均衡，人生各个方面都有稳定的基础',
+    '较为平衡': '整体发展协调，偶有强弱差异但不影响大局',
+    '略有偏重': '某些方面较为突出，需要注意平衡发展',
+    '严重失衡': '发展严重不均，需要重点加强薄弱环节'
+  };
+  
+  return interpretations[balanceLevel] || '需要具体分析平衡状况';
+}
+
+// 分析运势流向
+function analyzeFortuneFlow(palaces) {
+  const flowAnalysis = {
+    positive_flow: [],
+    negative_flow: [],
+    neutral_flow: [],
+    flow_patterns: []
+  };
+  
+  // 分析各宫位的运势倾向
+  palaces.forEach(palace => {
+    const strength = analyzePalaceStrength(palace);
+    const mutagens = extractMutagens(palace);
+    
+    let flowType = 'neutral';
+    let flowStrength = 0;
+    
+    // 根据宫位强度判断
+    if (strength.score > 2) {
+      flowType = 'positive';
+      flowStrength = strength.score;
+    } else if (strength.score < -1) {
+      flowType = 'negative';
+      flowStrength = Math.abs(strength.score);
+    }
+    
+    // 四化影响调整
+    mutagens.forEach(mutagen => {
+      switch (mutagen.mutagen) {
+        case '禄':
+          flowType = 'positive';
+          flowStrength += 1;
+          break;
+        case '权':
+          if (flowType === 'neutral') flowType = 'positive';
+          flowStrength += 0.5;
+          break;
+        case '科':
+          if (flowType === 'neutral') flowType = 'positive';
+          flowStrength += 0.5;
+          break;
+        case '忌':
+          flowType = 'negative';
+          flowStrength += 1;
+          break;
+      }
+    });
+    
+    const flowInfo = {
+      palace: palace.name,
+      type: flowType,
+      strength: flowStrength,
+      description: generateFlowDescription(palace.name, flowType, flowStrength)
+    };
+    
+    flowAnalysis[`${flowType}_flow`].push(flowInfo);
+  });
+  
+  // 识别流向模式
+  flowAnalysis.flow_patterns = identifyFlowPatterns(flowAnalysis);
+  
+  return flowAnalysis;
+}
+
+// 生成流向描述
+function generateFlowDescription(palaceName, flowType, strength) {
+  const descriptions = {
+    positive: {
+      high: `${palaceName}运势极佳，是当前发展的重点优势领域`,
+      medium: `${palaceName}运势良好，有不错的发展机会`,
+      low: `${palaceName}运势平稳向好，适合稳步发展`
+    },
+    negative: {
+      high: `${palaceName}运势较差，需要特别关注和改善`,
+      medium: `${palaceName}运势略有阻碍，需要谨慎应对`,
+      low: `${palaceName}运势稍有波折，保持警觉即可`
+    },
+    neutral: {
+      default: `${palaceName}运势平稳，维持现状即可`
+    }
+  };
+  
+  if (flowType === 'neutral') {
+    return descriptions.neutral.default;
+  }
+  
+  let strengthLevel;
+  if (strength >= 3) strengthLevel = 'high';
+  else if (strength >= 1.5) strengthLevel = 'medium';
+  else strengthLevel = 'low';
+  
+  return descriptions[flowType][strengthLevel] || `${palaceName}需要具体分析`;
+}
+
+// 识别流向模式
+function identifyFlowPatterns(flowAnalysis) {
+  const patterns = [];
+  
+  // 全面向好模式
+  if (flowAnalysis.positive_flow.length >= 8 && flowAnalysis.negative_flow.length <= 2) {
+    patterns.push({
+      name: '全面向好',
+      description: '整体运势强劲，各方面都有良好发展',
+      recommendation: '充分把握机会，全面发展'
+    });
+  }
+  
+  // 重点突破模式
+  else if (flowAnalysis.positive_flow.length >= 3 && flowAnalysis.positive_flow.length <= 6) {
+    patterns.push({
+      name: '重点突破',
+      description: '部分领域运势突出，适合重点发展',
+      recommendation: '集中优势资源，在强项上取得突破'
+    });
+  }
+  
+  // 守成维稳模式
+  else if (flowAnalysis.neutral_flow.length >= 6) {
+    patterns.push({
+      name: '守成维稳',
+      description: '运势平稳，适合守成和稳步发展',
+      recommendation: '保持现状，稳中求进，避免冒险'
+    });
+  }
+  
+  // 化解困难模式
+  else if (flowAnalysis.negative_flow.length >= 4) {
+    patterns.push({
+      name: '化解困难',
+      description: '多个领域面临挑战，需要积极应对',
+      recommendation: '优先解决问题，寻求外部支持'
+    });
+  }
+  
+  return patterns.length > 0 ? patterns : [{
+    name: '混合发展',
+    description: '运势有好有坏，需要具体分析',
+    recommendation: '因地制宜，扬长避短'
+  }];
+}
+
+// 计算综合分数
+function calculateComprehensiveScore(palaces) {
+  let totalScore = 0;
+  let validPalaces = 0;
+  
+  palaces.forEach(palace => {
+    const strength = analyzePalaceStrength(palace);
+    if (strength && typeof strength.score === 'number') {
+      totalScore += strength.score;
+      validPalaces++;
+    }
+  });
+  
+  const baseScore = validPalaces > 0 ? totalScore / validPalaces : 0;
+  
+  // 根据特殊格局调整分数
+  let adjustmentScore = 0;
+  const specialPatterns = identifySpecialPatterns({ palace_data: palaces });
+  
+  specialPatterns.forEach(pattern => {
+    if (pattern.level === '上上吉') adjustmentScore += 2;
+    else if (pattern.level === '上吉') adjustmentScore += 1.5;
+    else if (pattern.level === '上格') adjustmentScore += 1;
+    else if (pattern.level === '福格') adjustmentScore += 0.5;
+  });
+  
+  const finalScore = Math.max(0, Math.min(10, (baseScore + adjustmentScore + 5) * 10 / 10));
+  
+  return {
+    base_score: Math.round(baseScore * 10) / 10,
+    adjustment_score: adjustmentScore,
+    final_score: Math.round(finalScore * 10) / 10,
+    grade: getScoreGrade(finalScore),
+    interpretation: getScoreInterpretation(finalScore)
+  };
+}
+
+// 获取分数等级
+function getScoreGrade(score) {
+  if (score >= 8.5) return 'A+';
+  if (score >= 7.5) return 'A';
+  if (score >= 6.5) return 'B+';
+  if (score >= 5.5) return 'B';
+  if (score >= 4.5) return 'C+';
+  if (score >= 3.5) return 'C';
+  if (score >= 2.5) return 'D+';
+  if (score >= 1.5) return 'D';
+  return 'F';
+}
+
+// 获取分数解释
+function getScoreInterpretation(score) {
+  if (score >= 8.5) return '整体运势极佳，各方面发展都很理想';
+  if (score >= 7.5) return '整体运势很好，大部分方面发展顺利';
+  if (score >= 6.5) return '整体运势良好，多数方面有不错表现';
+  if (score >= 5.5) return '整体运势中上，发展机会较多';
+  if (score >= 4.5) return '整体运势中等，需要努力把握机会';
+  if (score >= 3.5) return '整体运势偏下，需要更多努力';
+  if (score >= 2.5) return '整体运势较差，面临一些挑战';
+  if (score >= 1.5) return '整体运势不佳，需要谨慎应对';
+  return '整体运势困难，需要特别关注和改善';
+}
+
+// 计算星曜质量
+function calculateStarQuality(majorStars, minorStars, toughStars) {
+  let qualityScore = 0;
+  
+  // 主星质量评估
+  majorStars.forEach(star => {
+    const brightness = star.brightness;
+    switch (brightness) {
+      case '庙': qualityScore += 5; break;
+      case '旺': qualityScore += 4; break;
+      case '得': qualityScore += 3; break;
+      case '利': qualityScore += 2; break;
+      case '平': qualityScore += 1; break;
+      case '不': qualityScore -= 1; break;
+      case '陷': qualityScore -= 2; break;
+    }
+    
+    // 四化加成
+    const mutagen = star.mutagen;
+    switch (mutagen) {
+      case '禄': qualityScore += 2; break;
+      case '权': qualityScore += 1.5; break;
+      case '科': qualityScore += 1; break;
+      case '忌': qualityScore -= 1.5; break;
+    }
+  });
+  
+  // 吉星加分
+  const luckyMinorStars = ['左辅', '右弼', '天魁', '天钺', '文昌', '文曲', '禄存'];
+  minorStars.forEach(star => {
+    if (luckyMinorStars.includes(star.name)) {
+      qualityScore += 0.5;
+    }
+  });
+  
+  // 凶星减分
+  const unluckyToughStars = ['擎羊', '陀罗', '火星', '铃星', '地空', '地劫'];
+  toughStars.forEach(star => {
+    if (unluckyToughStars.includes(star.name)) {
+      qualityScore -= 0.5;
+    }
+  });
+  
+  return {
+    score: Math.round(qualityScore * 10) / 10,
+    level: getQualityLevel(qualityScore)
+  };
+}
+
+// 获取质量等级
+function getQualityLevel(score) {
+  if (score >= 8) return '极优';
+  if (score >= 5) return '优秀';
+  if (score >= 2) return '良好';
+  if (score >= 0) return '一般';
+  if (score >= -2) return '偏差';
+  return '较差';
+}
+
+// 获取主导元素
+function getDominantElement(majorStars) {
+  const elementMap = {
+    '紫微': '土', '天机': '木', '太阳': '火', '武曲': '金',
+    '天同': '水', '廉贞': '火', '天府': '土', '太阴': '水',
+    '贪狼': '木', '巨门': '水', '天相': '水', '天梁': '土',
+    '七杀': '金', '破军': '水'
+  };
+  
+  const elementCount = { '金': 0, '木': 0, '水': 0, '火': 0, '土': 0 };
+  
+  majorStars.forEach(star => {
+    const element = elementMap[star.name];
+    if (element) {
+      elementCount[element]++;
+    }
+  });
+  
+  let dominantElement = '平衡';
+  let maxCount = 0;
+  
+  Object.entries(elementCount).forEach(([element, count]) => {
+    if (count > maxCount) {
+      maxCount = count;
+      dominantElement = element;
+    }
+  });
+  
+  return {
+    element: dominantElement,
+    count: maxCount,
+    distribution: elementCount,
+    interpretation: getElementInterpretation(dominantElement)
+  };
+}
+
+// 获取元素解释
+function getElementInterpretation(element) {
+  const interpretations = {
+    '金': '性格刚毅果断，有领导力，但可能过于严厉',
+    '木': '性格温和柔韧，富有创造力，善于成长',
+    '水': '性格灵活智慧，适应力强，但可能缺乏稳定性',
+    '火': '性格热情积极，行动力强，但可能过于急躁',
+    '土': '性格稳重务实，有包容力，但可能过于保守',
+    '平衡': '五行平衡，性格较为全面，各方面发展均衡'
+  };
+  
+  return interpretations[element] || '需要具体分析元素特质';
 }
 
 // 分析健康倾向
