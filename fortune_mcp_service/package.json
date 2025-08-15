@@ -1,5 +1,5 @@
 {
-  "name": "iztro-mcp-service",
+  "name": "fortune-mcp-service",
   "version": "1.0.0",
   "description": "紫微斗数星盘计算 MCP 服务",
   "main": "src/stdio-server.js",
@@ -13,7 +13,7 @@
   "keywords": [
     "mcp",
     "astrology",
-    "iztro",
+    "fortune",
     "紫微斗数",
     "claude-code"
   ],

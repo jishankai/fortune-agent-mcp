@@ -1,6 +1,6 @@
-# 紫微斗数 MCP 服务
+# 紫微斗数 Fortune MCP 服务
 
-将 [iztro](https://github.com/Sylarlong/iztro) 紫微斗数星盘计算库封装为 Claude Code 可调用的 MCP (Model Context Protocol) 服务，提供专业级的紫微斗数分析功能。
+将 [iztro](https://github.com/Sylarlong/iztro) 紫微斗数星盘计算库封装为 Claude Code 可调用的 Fortune MCP (Model Context Protocol) 服务，提供专业级的紫微斗数分析功能。
 
 ## 🌟 核心功能
 
@@ -25,10 +25,6 @@
 - 🎲 **吉凶等级判断**：大吉、中吉、小吉、平常、小凶、大凶
 - 🎯 **智能建议生成**：根据四化配置提供具体行动指导
 
-### 🛠️ 扩展功能
-- 🧮 **八字计算**：生辰八字计算，支持真太阳时矫正
-- ⏰ **真太阳时**：基于天文算法的精确时间计算
-- 🗺️ **地理位置**：根据地址查询经纬度坐标
 
 ### 💻 技术特性
 - 🐳 **Docker 支持**：一键部署，支持容器化运行
@@ -68,7 +64,7 @@ docker-compose up -d
 docker-compose ps
 
 # 查看日志
-docker-compose logs -f iztro-mcp-http
+docker-compose logs -f fortune-mcp-http
 ```
 
 ## 部署方式
@@ -105,147 +101,79 @@ docker-compose --profile stdio up -d
 ## 🛠️ MCP 工具列表
 
 ### 1. 🌟 generate_astrolabe_solar
-**智能阳历星盘生成器**
+**增强阳历星盘生成器**
 
-根据阳历生辰生成完整的紫微斗数星盘，包含星曜配置、宫位信息、四化分析等。
+根据阳历生辰和出生城市生成完整的紫微斗数星盘，包含真太阳时计算、星曜配置、宫位信息、全面运势分析等。
 
 **参数：**
 - `solar_date` (string): 阳历日期，格式：YYYY-MM-DD
-- `time` (string): 出生时间，格式：HH:mm（自动计算时辰）
+- `time` (string): 出生时间，格式：HH:mm
 - `gender` (string): 性别（男/女）
+- `city` (string): 出生城市，如：北京、上海、广州等
 - `is_leap` (boolean, 可选): 是否闰月，默认 false
+- `include_fortune` (boolean, 可选): 是否包含运势分析，默认 true
 
-**返回数据：**
-- 完整星盘配置（12宫位、100+星曜）
-- 星曜亮度、四化状态
-- 格局识别结果
-- 基础运势信息
+**增强功能：**
+- 🗺️ **城市坐标查询**：支持40+个中国主要城市，自动获取经纬度
+- ⏰ **真太阳时计算**：基于天文算法的精确时间计算和时辰修正
+- 📊 **全面运势分析**：包含性格、财运、事业、感情、健康五大维度
+- 🎯 **时空分析**：大限、流年、小限运势分析
+- 💎 **智能解读**：基于主星配置的个性化特质和建议
 
 **示例：**
 ```json
 {
   "solar_date": "1990-03-15",
   "time": "10:00",
-  "gender": "女"
+  "gender": "女",
+  "city": "上海",
+  "include_fortune": true
 }
 ```
 
-### 2. 🌙 generate_astrolabe_lunar
-**智能阴历星盘生成器**
+### 2. 🌙 generate_astrolabe_lunar  
+**增强阴历星盘生成器**
 
-根据阴历生辰生成紫微斗数星盘，支持闰月处理。
+根据阴历生辰和出生城市生成紫微斗数星盘，支持闰月处理，包含真太阳时计算和全面运势分析。
 
 **参数：**
 - `lunar_date` (string): 阴历日期，格式：YYYY-MM-DD
 - `time` (string): 出生时间，格式：HH:mm
 - `gender` (string): 性别（男/女）
+- `city` (string): 出生城市，如：北京、上海、广州等
 - `is_leap` (boolean, 可选): 是否闰月，默认 false
+- `include_fortune` (boolean, 可选): 是否包含运势分析，默认 true
 
-### 3. ⭐ analyze_star
-**深度星曜分析器**
 
-提供100+星曜的详细分析，包含星曜含义、四化效应、组合分析等。
-
-**参数：**
-- `star_name` (string): 星曜名称（紫微、天府、太阳等）
-- `palace` (string, 可选): 所在宫位
-
-**分析内容：**
-- 星曜基本含义和特质
-- 四化效应（禄权科忌）
-- 亮度影响分析
-- 星曜组合效应
-- 个性化建议
-
-### 4. 🔮 get_horoscope
-**专业运势分析器**
-
-集成四化飞星系统的专业运势分析，提供科学评分和个性化建议。
-
-**参数：**
-- `astrolabe_data` (object): 星盘数据（从星盘生成器获得）
-- `year` (number): 查询年份
-- `month` (number, 可选): 查询月份
-
-**分析功能：**
-- 🎯 大限、流年、流月四化分析
-- 📊 运势评分系统（0-100分）
-- ⚡ 四化相互作用分析
-- 🎲 吉凶等级判断
-- 💡 智能建议生成
-
-### 5. 🏰 get_palace_info
-**智能宫位分析器**
-
-深度分析十二宫位，提供宫位强度评估和星曜影响分析。
-
-**参数：**
-- `astrolabe_data` (object): 星盘数据
-- `palace_name` (string): 宫位名称（命宫、财帛宫等）
-
-**分析内容：**
-- 宫位星曜配置
-- 宫位强度评估
-- 星曜影响分析
-- 四化标记识别
-- 大运流年信息
-
-### 6. 🧠 analyze_relationships
-**AI 关系分析器**
-
-智能分析星曜与宫位关系，提供专项深度分析和个性化建议。
-
-**参数：**
-- `astrolabe_data` (object): 星盘数据
-- `analysis_type` (string): 分析类型
-  - `基本格局`：人格特质和运势格局
-  - `财运分析`：财运潜力和理财建议
-  - `事业分析`：职业方向和发展建议
-  - `感情分析`：感情模式和婚姻分析
-  - `健康分析`：健康倾向和养生建议
-
-**分析特色：**
-- 🎯 格局自动识别
-- 💡 个性化建议生成
-- 📈 潜力评估分析
-- 🎨 多维关系解读
 
 ## 使用示例
 
 ### Claude Code 中的使用
 
 ```
-用户：帮我生成1990年3月15日上午10点出生，女性的紫微斗数星盘
+用户：帮我生成1990年3月15日上午10点在上海出生，女性的紫微斗数星盘
 
-Claude：我来为您生成紫微斗数星盘。
+Claude：我来为您生成增强版紫微斗数星盘，包含真太阳时计算和全面运势分析。
 
-[使用 generate_astrolabe_solar 工具]
+[使用 generate_astrolabe_solar 工具，参数包含城市信息]
 
-用户：分析一下紫微星在命宫的含义
+用户：分析一下我的财运和事业发展
 
-Claude：我来分析紫微星在命宫的含义。
+Claude：根据您的星盘分析，您的财帛宫和官禄宫配置如下...
+[基于返回的 fortune_analysis 数据提供详细解读]
 
-[使用 analyze_star 工具]
-
-用户：查看我2025年的流年运势
-
-Claude：我来查看您2025年的流年运势。
-
-[使用 get_horoscope 工具]
 ```
 
 ## 项目结构
 
 ```
-mcp/
+fortune_mcp_service/
 ├── src/
 │   ├── http-server.js           # HTTP 模式服务器
 │   ├── stdio-server.js          # stdio 模式服务器
 │   ├── mcp-service.js           # MCP 服务核心逻辑
 │   ├── tools/
-│   │   ├── astrolabe.js         # 星盘生成
-│   │   ├── analysis.js          # 星曜分析
-│   │   └── horoscope.js         # 运势功能
+│   │   └── astrolabe.js         # 星盘生成
 │   └── utils/
 │       └── helper.js            # 公共辅助函数
 ├── Dockerfile                   # Docker 镜像构建

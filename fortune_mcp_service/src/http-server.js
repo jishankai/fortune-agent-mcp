@@ -167,7 +167,7 @@ app.get('/health', (req, res) => {
 // 服务信息端点
 app.get('/', (req, res) => {
   res.json({
-    name: 'iztro-mcp-http-service',
+    name: 'fortune-mcp-http-service',
     version: '1.0.0',
     description: '紫微斗数星盘计算 MCP HTTP 服务',
     endpoints: {
@@ -189,7 +189,7 @@ app.use((err, req, res, next) => {
 
 // 启动服务器
 app.listen(port, () => {
-  console.log(`🚀 iztro MCP HTTP 服务已启动`);
+  console.log(`🚀 Fortune MCP HTTP 服务已启动`);
   console.log(`📡 服务地址: http://localhost:${port}`);
   console.log(`🏥 健康检查: http://localhost:${port}/health`);
   console.log(`🔗 MCP 端点: http://localhost:${port}/mcp`);

@@ -1,10 +1,10 @@
 services:
   # 生产环境 HTTP MCP 服务
-  iztro-mcp-http:
+  fortune-mcp-http:
     build:
-      context: ./iztro_mcp_service
+      context: ./fortune_mcp_service
       dockerfile: Dockerfile
-    container_name: iztro-mcp-http
+    container_name: fortune-mcp-http
     restart: unless-stopped
     
     # HTTP 端口映射
@@ -50,11 +50,11 @@ services:
       start_period: 40s
 
   # 兼容性：保留 stdio 模式服务
-  iztro-mcp-stdio:
+  fortune-mcp-stdio:
     build:
-      context: ./iztro_mcp_service
+      context: ./fortune_mcp_service
       dockerfile: Dockerfile
-    container_name: iztro-mcp-stdio
+    container_name: fortune-mcp-stdio
     restart: unless-stopped
     
     # 覆盖启动命令为 stdio 模式
@@ -105,11 +105,11 @@ services:
       - stdio
 
   # 开发环境服务
-  iztro-mcp-dev:
+  fortune-mcp-dev:
     build:
-      context: ./iztro_mcp_service
+      context: ./fortune_mcp_service
       dockerfile: Dockerfile
-    container_name: iztro-mcp-dev
+    container_name: fortune-mcp-dev
     restart: unless-stopped
     
     # 开发环境端口
@@ -123,8 +123,8 @@ services:
     
     # 挂载源代码用于开发
     volumes:
-      - ./iztro_mcp_service/src:/app/src:ro
-      - ./iztro_mcp_service/package.json:/app/package.json:ro
+      - ./fortune_mcp_service/src:/app/src:ro
+      - ./fortune_mcp_service/package.json:/app/package.json:ro
     
     # 开发模式使用热重载
     command: ["npm", "run", "dev"]
