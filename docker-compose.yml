@@ -11,6 +11,10 @@ services:
     ports:
       - "3000:3000"
     
+    # 持久化存储
+    volumes:
+      - fortune-data:/app/data
+    
     # 环境变量
     environment:
       - NODE_ENV=production
@@ -121,10 +125,11 @@ services:
       - PORT=3000
       - TZ=Asia/Shanghai
     
-    # 挂载源代码用于开发
+    # 挂载源代码用于开发 + 持久化存储
     volumes:
       - ./fortune_mcp_service/src:/app/src:ro
       - ./fortune_mcp_service/package.json:/app/package.json:ro
+      - fortune-dev-data:/app/data
     
     # 开发模式使用热重载
     command: ["npm", "run", "dev"]
@@ -132,6 +137,13 @@ services:
     # 开发环境配置文件
     profiles:
       - dev
+
+# 数据卷配置
+volumes:
+  fortune-data:
+    driver: local
+  fortune-dev-data:
+    driver: local
 
 # 网络配置
 networks:

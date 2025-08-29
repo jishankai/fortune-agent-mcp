@@ -8,6 +8,7 @@ import {
   getMonthlyHoroscope, 
   getDailyHoroscope 
 } from './tools/horoscope.js';
+import { saveUserAstrolabe, getUserAstrolabe, listSavedUsers } from './tools/userManager.js';
 
 export function createMcpServer() {
   const server = new McpServer({
@@ -193,6 +194,66 @@ export function createMcpServer() {
     }
   );
 
-  console.log('✅ MCP 服务器创建完成，已注册 7 个工具');
+  // 注册保存用户星盘工具
+  server.registerTool(
+    'save_user_astrolabe',
+    {
+      title: '保存用户星盘',
+      description: '生成并保存用户的紫微斗数星盘到本地存储',
+      inputSchema: {
+        name: z.string().describe('用户名'),
+        birth_date: z.string().describe('出生日期，格式：YYYY-MM-DD'),
+        birth_time: z.string().describe('出生时间，格式：HH:mm'),
+        city: z.string().describe('出生城市'),
+        gender: z.enum(['男', '女']).describe('性别'),
+        is_lunar: z.boolean().optional().default(false).describe('是否为农历日期')
+      }
+    },
+    async (args) => {
+      console.log(`保存用户星盘：${JSON.stringify(args)}`);
+      const result = await saveUserAstrolabe(args.name, args.birth_date, args.birth_time, args.city, args.gender, args.is_lunar);
+      return {
+        content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
+      };
+    }
+  );
+
+  // 注册查询用户星盘工具
+  server.registerTool(
+    'get_user_astrolabe',
+    {
+      title: '查询用户星盘',
+      description: '通过用户名查询已保存的紫微斗数星盘',
+      inputSchema: {
+        name: z.string().describe('用户名')
+      }
+    },
+    async (args) => {
+      console.log(`查询用户星盘：${args.name}`);
+      const result = await getUserAstrolabe(args.name);
+      return {
+        content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
+      };
+    }
+  );
+
+  // 注册列出已保存用户工具
+  server.registerTool(
+    'list_saved_users',
+    {
+      title: '列出已保存用户',
+      description: '列出你已保存的所有用户星盘信息',
+      inputSchema: {}
+    },
+    async () => {
+      console.log('列出已保存用户');
+      const result = await listSavedUsers();
+      return {
+        content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
+      };
+    }
+  );
+
+  console.log('✅ MCP 服务器创建完成，已注册 10 个工具');
   return server;
 }

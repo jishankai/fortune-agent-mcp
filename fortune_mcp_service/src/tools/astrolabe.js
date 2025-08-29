@@ -37,86 +37,6 @@ function getTimeIndex(hour, minute) {
 }
 
 /**
- * 构建完整的星盘数据
- * @param {Object} astrolabe - iztro星盘对象
- * @returns {Object} 完整的星盘数据
- */
-function buildCompleteAstrolabeData(astrolabe) {
-  // 构建宫位数据 - 包含所有星曜信息
-  const palace_data = astrolabe.palaces.map(palace => {
-    const allStars = [
-      ...palace.majorStars,
-      ...palace.minorStars,
-      ...palace.adjectiveStars
-    ];
-    
-    return {
-      name: palace.name,
-      index: palace.index,
-      heavenly_stem: palace.heavenlyStem,
-      earthly_branch: palace.earthlyBranch,
-      is_body_palace: palace.isBodyPalace,
-      is_original_palace: palace.isOriginalPalace,
-      // 主星列表
-      major_stars: palace.majorStars.map(star => ({
-        name: star.name,
-        type: star.type,
-        scope: star.scope,
-        brightness: star.brightness,
-        mutagen: star.mutagen || null
-      })),
-      // 辅星列表  
-      minor_stars: palace.minorStars.map(star => ({
-        name: star.name,
-        type: star.type,
-        scope: star.scope,
-        brightness: star.brightness,
-        mutagen: star.mutagen || null
-      })),
-      // 杂曜列表
-      adjective_stars: palace.adjectiveStars.map(star => ({
-        name: star.name,
-        type: star.type,
-        scope: star.scope,
-        brightness: star.brightness,
-        mutagen: star.mutagen || null
-      })),
-      // 所有星曜合并列表（为了兼容）
-      stars: allStars.map(star => ({
-        name: star.name,
-        type: star.type,
-        scope: star.scope,
-        brightness: star.brightness,
-        mutagen: star.mutagen || null
-      }))
-    };
-  });
-  
-  // 构建星曜位置映射
-  const star_locations = {};
-  astrolabe.palaces.forEach(palace => {
-    const allStars = [
-      ...palace.majorStars,
-      ...palace.minorStars,
-      ...palace.adjectiveStars
-    ];
-    allStars.forEach(star => {
-      star_locations[star.name] = {
-        name: star.name,
-        palace: palace.name,
-        palace_index: palace.index,
-        brightness: star.brightness,
-        type: star.type,
-        scope: star.scope,
-        mutagen: star.mutagen || null
-      };
-    });
-  });
-  
-  return { palace_data, star_locations };
-}
-
-/**
  * 生成阳历星盘（增强版）
  */
 export async function generateAstrolabeSolar({ solar_date, time, gender, city, is_leap = false, include_fortune = true, query_year, query_month, query_day }) {
@@ -162,44 +82,10 @@ export async function generateAstrolabeSolar({ solar_date, time, gender, city, i
     // 生成星盘
     const astrolabe = astro.bySolar(solar_date, timeIndex, gender, is_leap, 'zh-CN');
     
-    // 构建基础信息 - 更完整的信息
-    const basic_info = {
-      solar_date: astrolabe.solarDate,
-      lunar_date: astrolabe.lunarDate,
-      time: astrolabe.time,
-      time_range: astrolabe.timeRange,
-      gender: gender,
-      zodiac: astrolabe.zodiac,
-      five_elements: astrolabe.fiveElementsClass,
-      city: city,
-      coordinates: coordinates,
-      // 添加身宫信息
-      body_palace: astrolabe.palaces.find(p => p.isBodyPalace)?.name || null
-    };
-    
-    // 时间计算信息
-    const time_calculation = {
-      original_time: solarTimeResult.data.meanSolarTime,
-      true_solar_time: trueSolarTime,
-      time_index: timeIndex,
-      time_branch: ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'][timeIndex],
-      adjustment_minutes: Math.round(solarTimeResult.data.corrections.totalCorrection),
-      equation_of_time: Math.round(solarTimeResult.data.corrections.equationOfTime),
-      astronomical_data: solarTimeResult.data.astronomicalData
-    };
-    
-    // 构建完整的星盘数据
-    const { palace_data, star_locations } = buildCompleteAstrolabeData(astrolabe);
-    
     // 构建返回结果
     const result = {
       success: true,
-      data: {
-        basic_info,
-        time_calculation,
-        palace_data,
-        star_locations
-      },
+      data: astrolabe,
       message: '阳历星盘生成成功，已包含真太阳时计算'
     };
     
@@ -262,45 +148,10 @@ export async function generateAstrolabeLunar({ lunar_date, time, gender, city, i
     // 重新生成星盘
     const astrolabe = astro.byLunar(lunar_date, timeIndex, gender, is_leap, true, 'zh-CN');
     
-    // 构建基础信息 - 更完整的信息
-    const basic_info = {
-      solar_date: astrolabe.solarDate,
-      lunar_date: astrolabe.lunarDate,
-      time: astrolabe.time,
-      time_range: astrolabe.timeRange,
-      gender: gender,
-      zodiac: astrolabe.zodiac,
-      five_elements: astrolabe.fiveElementsClass,
-      city: city,
-      coordinates: coordinates,
-      is_leap_month: is_leap,
-      // 添加身宫信息
-      body_palace: astrolabe.palaces.find(p => p.isBodyPalace)?.name || null
-    };
-    
-    // 时间计算信息
-    const time_calculation = {
-      original_time: solarTimeResult.data.meanSolarTime,
-      true_solar_time: trueSolarTime,
-      time_index: timeIndex,
-      time_branch: ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'][timeIndex],
-      adjustment_minutes: Math.round(solarTimeResult.data.corrections.totalCorrection),
-      equation_of_time: Math.round(solarTimeResult.data.corrections.equationOfTime),
-      astronomical_data: solarTimeResult.data.astronomicalData
-    };
-    
-    // 构建完整的星盘数据
-    const { palace_data, star_locations } = buildCompleteAstrolabeData(astrolabe);
-    
     // 构建返回结果
     const result = {
       success: true,
-      data: {
-        basic_info,
-        time_calculation,
-        palace_data,
-        star_locations
-      },
+      data: astrolabe,
       message: '阴历星盘生成成功，已包含真太阳时计算'
     };
     
