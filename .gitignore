@@ -6,4 +6,7 @@ npm-debug.log
 coverage/
 dist/
 package-lock.json
+GEMINI.md
+CLAUDE.md
+AGENTS.md
 docs/

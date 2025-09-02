@@ -1,25 +1,18 @@
 import { saveUser, getUser, listUsers } from '../storage/userStorage.js';
-import { generateAstrolabeSolar, generateAstrolabeLunar } from './astrolabe.js';
+import { generateAstrolabe } from '../utils/astrolabe_helper.js';
 
-export async function saveUserAstrolabe(name, birthDate, birthTime, city, gender, isLunar = false) {
+export async function saveUserAstrolabe(name, birthDate, birthTime, city, gender, isLunar = false, is_leap = false) {
   try {
     let astrolabeData;
     
-    if (isLunar) {
-      astrolabeData = await generateAstrolabeLunar({
-        lunar_date: birthDate,
-        time: birthTime,
-        city,
-        gender
-      });
-    } else {
-      astrolabeData = await generateAstrolabeSolar({
-        solar_date: birthDate,
-        time: birthTime,
-        city,
-        gender
-      });
-    }
+    astrolabeData = await generateAstrolabe({
+      birth_date: birthDate,
+      time: birthTime,
+      city,
+      gender,
+      is_lunar: isLunar,
+      is_leap: is_leap
+    });
 
     const userData = {
       name,
@@ -36,13 +29,15 @@ export async function saveUserAstrolabe(name, birthDate, birthTime, city, gender
     return {
       success: true,
       message: `用户 ${name} 的星盘已保存`,
-      data: userData
+      data: userData,
+      time: new Date().toISOString()
     };
   } catch (error) {
     return {
       success: false,
       message: `保存失败: ${error.message}`,
-      error: error.message
+      error: error.message,
+      time: new Date().toISOString()
     };
   }
 }
@@ -54,20 +49,23 @@ export async function getUserAstrolabe(name) {
     if (!userData) {
       return {
         success: false,
-        message: `未找到用户 ${name} 的星盘数据`
+        message: `未找到用户 ${name} 的星盘数据`,
+        time: new Date().toISOString()
       };
     }
 
     return {
       success: true,
       message: `找到用户 ${name} 的星盘数据`,
-      data: userData
+      data: userData,
+      time: new Date().toISOString()
     };
   } catch (error) {
     return {
       success: false,
       message: `查询失败: ${error.message}`,
-      error: error.message
+      error: error.message,
+      time: new Date().toISOString()
     };
   }
 }
@@ -79,13 +77,15 @@ export async function listSavedUsers() {
     return {
       success: true,
       message: `找到 ${usersList.length} 个已保存的用户`,
-      data: usersList
+      data: usersList,
+      time: new Date().toISOString()
     };
   } catch (error) {
     return {
       success: false,
       message: `查询失败: ${error.message}`,
-      error: error.message
+      error: error.message,
+      time: new Date().toISOString()
     };
   }
 }

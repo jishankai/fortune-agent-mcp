@@ -3,7 +3,7 @@
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
-import { generateAstrolabeSolar, generateAstrolabeLunar } from './tools/astrolabe.js';
+import { generateAstrolabe } from './tools/astrolabe.js';
 import { analyzeStar, getPalaceInfo, analyzeRelationships } from './tools/analysis.js';
 import { getHoroscope } from './tools/horoscope.js';
 
@@ -16,22 +16,24 @@ const server = new McpServer({
   }
 });
 
-// 注册阳历星盘生成工具
+// 注册统一星盘生成工具
 server.registerTool(
-  'generate_astrolabe_solar',
+  'generate_astrolabe',
   {
-    title: '阳历星盘生成器',
-    description: '根据阳历生辰生成紫微斗数星盘',
+    title: '增强星盘生成器',
+    description: '根据生辰、城市位置生成紫微斗数星盘，支持阳历和农历，包含真太阳时计算和全面运势分析',
     inputSchema: {
-      solar_date: z.string().describe('阳历日期，格式：YYYY-MM-DD'),
+      birth_date: z.string().describe('出生日期，格式：YYYY-MM-DD'),
       time: z.string().describe('出生时间，格式：HH:mm'),
       gender: z.enum(['男', '女']).describe('性别'),
-      is_leap: z.boolean().optional().describe('是否闰月').default(false)
+      city: z.string().describe('出生城市，如：北京、上海、广州等，用于经纬度查询和真太阳时计算'),
+      is_lunar: z.boolean().optional().default(false).describe('是否为农历日期，默认false表示阳历'),
+      is_leap: z.boolean().optional().default(false).describe('是否为闰月（仅农历有效)')
     }
   },
   async (args) => {
-    console.error(`生成阳历星盘：${JSON.stringify(args)}`);
-    const result = await generateAstrolabeSolar(args);
+    console.error(`生成增强星盘：${JSON.stringify(args)}`);
+    const result = await generateAstrolabe(args);
     console.error('星盘生成完成！');
     return {
       content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
@@ -39,28 +41,6 @@ server.registerTool(
   }
 );
 
-// 注册阴历星盘生成工具
-server.registerTool(
-  'generate_astrolabe_lunar',
-  {
-    title: '阴历星盘生成器',
-    description: '根据阴历生辰生成紫微斗数星盘',
-    inputSchema: {
-      lunar_date: z.string().describe('阴历日期，格式：YYYY-MM-DD'),
-      time: z.string().describe('出生时间，格式：HH:mm'),
-      gender: z.enum(['男', '女']).describe('性别'),
-      is_leap: z.boolean().optional().describe('是否闰月').default(false)
-    }
-  },
-  async (args) => {
-    console.error(`生成阴历星盘：${JSON.stringify(args)}`);
-    const result = await generateAstrolabeLunar(args);
-    console.error('阴历星盘生成完成！');
-    return {
-      content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
-    };
-  }
-);
 
 // 注册星曜分析工具
 server.registerTool(

@@ -15,11 +15,15 @@ This is a Chinese astrology (紫微斗数/Ziwei Doushu) MCP (Model Context Proto
   - HTTP mode: `src/http-server.js` (recommended, port 3000)
   - stdio mode: `src/stdio-server.js` (for direct MCP connection)
 - **Tool Modules**:
-  - `src/tools/astrolabe.js` - Chart generation (solar/lunar calendar)
-  - `src/tools/horoscope.js` - Multi-timeframe fortune analysis
-  - `src/tools/userManager.js` - User data persistence
-- **Utilities**: `src/utils/` - Helper functions, astronomical calculations, HTTP client
-- **Storage**: `src/storage/` - SQLite-based user data storage
+  - `src/tools/astrolabe.js` - Palace-based chart generation and analysis
+  - `src/tools/horoscope.js` - Multi-timeframe fortune analysis (decadal, yearly, monthly, daily)
+  - `src/tools/user.js` - User data persistence and management
+- **Utilities**: 
+  - `src/utils/astrolabe_helper.js` - Core astrolabe generation and formatting
+  - `src/utils/geo_lookup_service.js` - City coordinate lookup service
+  - `src/utils/solar_time_calculator.js` - True solar time calculation
+  - `src/utils/patterns.js` - Pattern detection for astrology charts
+- **Storage**: `src/storage/userStorage.js` - SQLite-based user data storage
 
 ### Key Dependencies
 
@@ -45,14 +49,9 @@ npm run start:stdio
 # Development mode with hot reload
 npm run dev
 
-# Docker deployment (production)
-docker-compose up -d
-
-# Docker development environment
-docker-compose --profile dev up -d
-
-# Docker stdio mode
-docker-compose --profile stdio up -d
+# Build and run with Docker
+docker build -t fortune-mcp .
+docker run -p 3000:3000 fortune-mcp
 ```
 
 ## Service Endpoints (HTTP Mode)
@@ -63,19 +62,22 @@ docker-compose --profile stdio up -d
 
 ## Available MCP Tools
 
-### Enhanced Astrology Chart Generation
-- `generate_astrolabe_solar` - Enhanced solar calendar chart with city coordinates, true solar time calculation, and comprehensive fortune analysis
-- `generate_astrolabe_lunar` - Enhanced lunar calendar chart with city coordinates, true solar time calculation, and comprehensive fortune analysis
+### Chart Generation and Palace Analysis
+- `get_palace` - Generate astrolabe and query specific palace information with pattern analysis
 
-### Fortune Analysis Tools
-- `get_decadal_horoscope` - Decadal fortune analysis (大限运势)
-- `get_age_horoscope` - Age-based fortune analysis (小限运势) 
-- `get_yearly_horoscope` - Annual fortune analysis (流年运势)
-- `get_monthly_horoscope` - Monthly fortune analysis (流月运势)
-- `get_daily_horoscope` - Daily fortune analysis (流日运势)
+### Fortune Analysis Tools (Full Analysis)
+- `get_horoscope` - Decadal fortune analysis (大限运势) with pattern analysis
+- `get_yearly_horoscope` - Annual fortune analysis (流年运势) with pattern analysis
+- `get_monthly_horoscope` - Monthly fortune analysis (流月运势) with pattern analysis  
+- `get_daily_horoscope` - Daily fortune analysis (流日运势) with pattern analysis
+
+### Fortune Analysis Tools (Lite Versions)
+- `get_yearly_horoscope_lite` - Lightweight annual fortune analysis
+- `get_monthly_horoscope_lite` - Lightweight monthly fortune analysis
+- `get_daily_horoscope_lite` - Lightweight daily fortune analysis
 
 ### User Management Tools
-- `save_user_astrolabe` - Save user astrology charts to local storage
+- `save_user_astrolabe` - Save user astrology charts to local SQLite storage
 - `get_user_astrolabe` - Retrieve saved user charts by name
 - `list_saved_users` - List all saved users
 
@@ -103,11 +105,19 @@ docker-compose --profile stdio up -d
 ## Data Flow Pattern
 
 1. **Input**: Provide birth date, time, gender, and city
-2. **Coordinate Lookup**: System automatically finds city coordinates
-3. **True Solar Time**: Calculates astronomical true solar time based on location
+2. **Coordinate Lookup**: System automatically finds city coordinates via `geo_lookup_service.js`
+3. **True Solar Time**: Calculates astronomical true solar time via `solar_time_calculator.js`
 4. **Chart Generation**: Creates comprehensive astrology chart using iztro library
-5. **Fortune Analysis**: Generates detailed personality, wealth, career, love, and health insights
-6. **Output**: Returns complete chart with time calculations, palace data, and fortune analysis
+5. **Pattern Detection**: Analyzes chart patterns via `patterns.js`
+6. **Fortune Analysis**: Generates detailed analysis based on palace configurations
+7. **Output**: Returns complete chart with time calculations, palace data, and pattern analysis
+
+## Tool Function Mapping
+
+- `get_palace` → `getPalace()` in `src/tools/astrolabe.js`
+- Fortune tools → various functions in `src/tools/horoscope.js`
+- User tools → functions in `src/tools/user.js`
+- Core generation → `generateAstrolabe()` in `src/utils/astrolabe_helper.js`
 
 ## Key Technical Details
 
@@ -122,9 +132,9 @@ docker-compose --profile stdio up -d
 - Detailed logging for debugging
 
 ### Performance Considerations
-- 50MB JSON payload limit for large astrolabe data
-- Memory limits: 512M production, 256M stdio mode
-- CPU limits: 0.5 cores production, 0.25 stdio mode
+- 50MB JSON payload limit for large astrolabe data (configured in http-server.js:22)
+- Session cleanup runs every 5 minutes, with 30-minute timeout for inactive sessions
+- Extensive debug logging for request body sizes and astrolabe data
 
 ### Security Features
 - Non-root container execution
@@ -136,12 +146,12 @@ docker-compose --profile stdio up -d
 
 ### Common Issues
 1. **Dependency installation failures**: Delete `node_modules` and `package-lock.json`, then `npm install`
-2. **Docker build failures**: Use `docker-compose build --no-cache`
-3. **MCP connection issues**: Check service logs with `docker-compose logs`
+2. **Docker build failures**: Use `docker build --no-cache -t fortune-mcp .`
+3. **MCP connection issues**: Check service logs with `docker logs <container_name>`
 
 ### Debug Mode
 - Set `NODE_ENV=development` for verbose logging
-- Use Docker dev profile for development debugging
+- Use `npm run dev` for hot reload during development
 
 ## Working with Chinese Astrology Data
 
