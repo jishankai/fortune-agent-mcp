@@ -179,8 +179,8 @@ export function formatSurroundedPalaces(surroundedPalaces) {
   return {
     "对宫": formatPalace(surroundedPalaces.opposite),
     "三方": {
-      "辅助宫": formatPalace(surroundedPalaces.wealth),
-      "辅助宫": formatPalace(surroundedPalaces.career),
+      "三合宫之一": formatPalace(surroundedPalaces.wealth),
+      "三合宫之二": formatPalace(surroundedPalaces.career),
     },
   };
 }

@@ -55,8 +55,8 @@ function getHoroscopeData(scope, query_date, astrolabe, palace_name, isLite = fa
       }[sc];
       
       // Detect patterns for this temporal scope using active chart
-      // Note: For temporal pattern detection (like 禄衰马困), we pass the horoscope data as activeChart
-      const temporalPatterns = detectPatterns(astrolabe, horoscope);
+      // Note: Pass scope to align with FunctionalHoroscope lookups
+      const temporalPatterns = detectPatterns(astrolabe, horoscope, sc);
       
       result[scopeName] = {
         "目标宫位": scFormattedPalace,
