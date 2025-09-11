@@ -6,9 +6,6 @@ import {
   getYearlyHoroscope, 
   getMonthlyHoroscope, 
   getDailyHoroscope,
-  getYearlyHoroscopeLite,
-  getMonthlyHoroscopeLite,
-  getDailyHoroscopeLite
 } from './tools/horoscope.js';
 import { saveUserAstrolabe, getUserAstrolabe, listSavedUsers } from './tools/user.js';
 import { analyzeSynastryByInfo, analyzeSynastryBySavedUsers } from './tools/synastry.js';
@@ -189,120 +186,6 @@ export function createMcpServer() {
     async (args) => {
       console.log(`查询流日运势：${JSON.stringify(args)}`);
       const result = await getDailyHoroscope({
-        birth_date: args.birth_date,
-        birth_time: args.birth_time,
-        gender: args.gender,
-        city: args.city,
-        is_lunar: args.is_lunar,
-        is_leap: args.is_leap,
-        palace_name: args.palace_name,
-        query_year: args.query_year,
-        query_month: args.query_month,
-        query_day: args.query_day
-      });
-      console.log('流日运势查询完成！');
-      return {
-        content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
-      };
-    }
-  );
-
-  // 注册流年运势工具（含格局分析）
-  server.registerTool(
-    'get_yearly_horoscope_lite',
-    {
-      title: '流年运势查询',
-      description: '查询紫微斗数流年运势（年运势），包含格局分析',
-      inputSchema: {
-        birth_date: z.string().describe('出生日期，格式：YYYY-MM-DD'),
-        birth_time: z.string().describe('出生时间，格式：HH:mm'),
-        gender: z.enum(['男', '女']).describe('性别'),
-        city: z.string().describe('出生城市，用于经纬度查询和真太阳时计算'),
-        is_lunar: z.boolean().optional().default(false).describe('是否为农历日期'),
-        is_leap: z.boolean().optional().default(false).describe('是否为闰月（仅农历有效）'),
-        palace_name: z.enum(['命宫', '身宫', '兄弟', '夫妻', '子女', '财帛', '疾厄', '迁移', '仆役', '官禄', '田宅', '福德', '父母', '来因']).optional().default('命宫').describe('要查询的宫位名称，默认为命宫'),
-        query_year: z.number().describe('查询年份')
-      }
-    },
-    async (args) => {
-      console.log(`查询流年运势：${JSON.stringify(args)}`);
-      const result = await getYearlyHoroscopeLite({
-        birth_date: args.birth_date,
-        birth_time: args.birth_time,
-        gender: args.gender,
-        city: args.city,
-        is_lunar: args.is_lunar,
-        is_leap: args.is_leap,
-        palace_name: args.palace_name,
-        query_year: args.query_year
-      });
-      console.log('流年运势查询完成！');
-      return {
-        content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
-      };
-    }
-  );
-
-  // 注册流月运势工具（含格局分析）
-  server.registerTool(
-    'get_monthly_horoscope_lite',
-    {
-      title: '流月运势查询',
-      description: '查询紫微斗数流月运势（月运势），包含格局分析',
-      inputSchema: {
-        birth_date: z.string().describe('出生日期，格式：YYYY-MM-DD'),
-        birth_time: z.string().describe('出生时间，格式：HH:mm'),
-        gender: z.enum(['男', '女']).describe('性别'),
-        city: z.string().describe('出生城市，用于经纬度查询和真太阳时计算'),
-        is_lunar: z.boolean().optional().default(false).describe('是否为农历日期'),
-        is_leap: z.boolean().optional().default(false).describe('是否为闰月（仅农历有效）'),
-        palace_name: z.enum(['命宫', '身宫', '兄弟', '夫妻', '子女', '财帛', '疾厄', '迁移', '仆役', '官禄', '田宅', '福德', '父母', '来因']).optional().default('命宫').describe('要查询的宫位名称，默认为命宫'),
-        query_year: z.number().describe('查询年份'),
-        query_month: z.number().describe('查询月份（1-12）')
-      }
-    },
-    async (args) => {
-      console.log(`查询流月运势：${JSON.stringify(args)}`);
-      const result = await getMonthlyHoroscopeLite({
-        birth_date: args.birth_date,
-        birth_time: args.birth_time,
-        gender: args.gender,
-        city: args.city,
-        is_lunar: args.is_lunar,
-        is_leap: args.is_leap,
-        palace_name: args.palace_name,
-        query_year: args.query_year,
-        query_month: args.query_month
-      });
-      console.log('流月运势查询完成！');
-      return {
-        content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
-      };
-    }
-  );
-
-  // 注册流日运势工具（含格局分析）
-  server.registerTool(
-    'get_daily_horoscope_lite',
-    {
-      title: '流日运势查询',
-      description: '查询紫微斗数流日运势（日运势），包含格局分析',
-      inputSchema: {
-        birth_date: z.string().describe('出生日期，格式：YYYY-MM-DD'),
-        birth_time: z.string().describe('出生时间，格式：HH:mm'),
-        gender: z.enum(['男', '女']).describe('性别'),
-        city: z.string().describe('出生城市，用于经纬度查询和真太阳时计算'),
-        is_lunar: z.boolean().optional().default(false).describe('是否为农历日期'),
-        is_leap: z.boolean().optional().default(false).describe('是否为闰月（仅农历有效）'),
-        palace_name: z.enum(['命宫', '身宫', '兄弟', '夫妻', '子女', '财帛', '疾厄', '迁移', '仆役', '官禄', '田宅', '福德', '父母', '来因']).optional().default('命宫').describe('要查询的宫位名称，默认为命宫'),
-        query_year: z.number().describe('查询年份'),
-        query_month: z.number().describe('查询月份（1-12）'),
-        query_day: z.number().describe('查询日期（1-31）')
-      }
-    },
-    async (args) => {
-      console.log(`查询流日运势：${JSON.stringify(args)}`);
-      const result = await getDailyHoroscopeLite({
         birth_date: args.birth_date,
         birth_time: args.birth_time,
         gender: args.gender,

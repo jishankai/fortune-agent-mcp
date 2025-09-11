@@ -6,7 +6,7 @@ import { solarTimeCalculator } from './solar_time_calculator.js';
  * @param {string} type - 英文星曜类型
  * @returns {string} 中文星曜类型
  */
-export function getChineseStarType(type) {
+function starsTypeMapping(type) {
   const stars = {
     'major': '主星',
     'soft': '吉星', 
@@ -21,13 +21,27 @@ export function getChineseStarType(type) {
   return stars[type] || type;
 }
 
+function scopeMapping(scope) {
+  const scopes = {
+    'daily': '流日星耀',
+    'monthly': '流月星耀',
+    'yearly': '流年星耀',
+    'decadal': '大限星耀',
+    'origin': '本命星耀'
+  };
+
+  return scopes[scope] || scope;
+}
+
+const MUTAGENS_MAPPING = ['禄', '权', '科', '忌'];
+
 /**
  * 计算时辰索引
  * @param {number} hour - 小时
  * @param {number} minute - 分钟
  * @returns {number} 时辰索引 (0-11对应子-亥时)
  */
-export function getTimeIndex(hour, minute) {
+function getTimeIndex(hour, minute) {
   const totalMinutes = hour * 60 + minute;
   
   // 子时: 23:00-01:00
@@ -62,6 +76,7 @@ export function getTimeIndex(hour, minute) {
 export async function generateAstrolabe({ birth_date, time, gender, city, is_lunar = false, is_leap = false }) {
   try {
     const { astro } = await import('iztro');
+    astro.config({ yearDivide: 'normal' });
     const [hour, minute] = time.split(':').map(Number);
     
     // 检查必需参数
@@ -139,48 +154,85 @@ export async function generateAstrolabe({ birth_date, time, gender, city, is_lun
 /**
  * 格式化宫位的通用函数
  */
-export function formatPalace(palace) {
-  return {
+export function formatPalace(palace, horoscope = {}, scope = 'origin') {
+  console.log(horoscope);
+  const ret = {
     "宫位索引": palace.index,
-    "宫位名称": palace.name,
+    "宫位名称": horoscope?.palaceNames?.[palace.index] || palace.name,
     "是否身宫": palace.isBodyPalace,
     "是否本宫": palace.isOriginalPalace,
     "天干": palace.heavenlyStem,
     "地支": palace.earthlyBranch,
     "主星": palace.majorStars?.map(star => ({
       "星曜名称": star.name,
-      "星曜类型": getChineseStarType(star.type),
-      "作用范围": star.scope,
+      "星曜类型": starsTypeMapping(star.type),
+      "作用范围": scopeMapping(star.scope),
       "亮度": star.brightness || "无",
-      "四化": star.mutagen ? star.name+'化'+star.mutagen : "无"
+      "本命盘四化": star.mutagen ? star.name+'化'+star.mutagen : "无"
     })) || [],
     "辅星": palace.minorStars?.map(star => ({
       "星曜名称": star.name,
-      "星曜类型": getChineseStarType(star.type),
-      "作用范围": star.scope,
+      "星曜类型": starsTypeMapping(star.type),
+      "作用范围": scopeMapping(star.scope),
       "亮度": star.brightness || "无"
     })) || [],
     "杂曜": palace.adjectiveStars?.map(star => ({
       "星曜名称": star.name,
-      "星曜类型": getChineseStarType(star.type),
-      "作用范围": star.scope
+      "星曜类型": starsTypeMapping(star.type),
+      "作用范围": scopeMapping(star.scope)
     })) || [],
-    "长生十二神": palace.changsheng12,
-    "博士十二神": palace.boshi12,
-    "将前十二神": palace.jiangqian12,
-    "岁前十二神": palace.suiqian12,
   };
+  if (scope == 'origin') {
+    ret["长生十二神"] = palace.changsheng12 || "无",
+    ret["博士十二神"] = palace.boshi12 || "无"
+  } else {
+    ret["将前十二神"] = palace.jiangqian12 || "无",
+    ret["岁前十二神"] = palace.suiqian12 || "无"
+  }
+  if (scope == 'decadal') {
+    ret["运耀"] = horoscope.stars[palace.index]?.map(star => ({
+      "星曜名称": star.name,
+      "星曜类型": starsTypeMapping(star.type),
+      "作用范围": scopeMapping(star.scope),
+      "亮度": star.brightness || "无",
+      "运耀四化": star.mutagen ? star.name+'化'+star.mutagen : "无"
+    })) || [];
+    // 查询stars.name是不是在horoscope.mutagens里
+    ret["大限飞星四化"] = horoscope.mutagen?.reduce((acc, mutagen, i) => {
+      if (palace.majorStars?.some(star => star.name === mutagen)) {
+        acc.push(mutagen + '化' + MUTAGENS_MAPPING[i]);
+      }
+      return acc;
+    }, []) || [];
+
+  }
+  if (scope == 'yearly') {
+    ret["流曜"] = horoscope.stars[palace.index]?.map(star => ({
+      "星曜名称": star.name,
+      "星曜类型": starsTypeMapping(star.type),
+      "作用范围": scopeMapping(star.scope),
+      "亮度": star.brightness || "无",
+      "流曜四化": star.mutagen ? star.name+'化'+star.mutagen : "无"
+    })) || [];
+    ret["流年飞星四化"] = horoscope.mutagen?.reduce((acc, mutagen, i) => {
+      if (palace.majorStars?.some(star => star.name === mutagen)) {
+        acc.push(mutagen + '化' + MUTAGENS_MAPPING[i]);
+      }
+      return acc;
+    }, []) || [];
+  }
+  return ret;
 }
 
 /**
  * 格式化三方四正宫位信息
  */
-export function formatSurroundedPalaces(surroundedPalaces) {
+export function formatSurroundedPalaces(surroundedPalaces, horoscope = {}, scope = 'origin') {
   return {
-    "对宫": formatPalace(surroundedPalaces.opposite),
+    "对宫": formatPalace(surroundedPalaces.opposite, horoscope, scope),
     "三方": {
-      "三合宫之一": formatPalace(surroundedPalaces.wealth),
-      "三合宫之二": formatPalace(surroundedPalaces.career),
+      "三合宫之一": formatPalace(surroundedPalaces.wealth, horoscope, scope),
+      "三合宫之二": formatPalace(surroundedPalaces.career, horoscope, scope),
     },
   };
 }

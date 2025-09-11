@@ -47,53 +47,85 @@ function _opp(i) { return (i + 6) % 12; }
 
 /**
  * 构建星盘映射表（仅支持iztro对象）
- * @param {Object} astrolabe - iztro星盘对象
+ * @param {Object} chart - iztro chart(astrolabe, horoscope)对象
  * @returns {Object} - 宫位星曜、四化、名称和干支映射表
  */
-function buildMaps(astrolabe) {
+function buildMaps(chart, scope) {
   const palStars = {};
   const palMutagen = {};
   const nameToIdx = {};
+  const idxToName = {};
   const idxToBranch = {};
   const idxToStem = {};
 
-  // 仅处理iztro astrolabe对象
-  if (typeof astrolabe.palace !== 'function') {
-    throw new Error('仅支持iztro astrolabe对象，请使用generateAstrolabe()生成的星盘数据');
+  // 处理iztro astrolabe对象
+  if (!scope) {
+    for (let i = 0; i < 12; i++) {
+      const palaceName = PALACE_NAMES[i];
+      const palace = chart.palace(palaceName);
+
+      nameToIdx[palace.name] = palace.index;
+      idxToName[palace.index] = palace.name;
+      idxToBranch[palace.index] = palace.earthlyBranch;
+      idxToStem[palace.index] = palace.heavenlyStem;
+
+      const stars = new Set();
+      const muts = new Set();
+
+      // 收集各类星曜
+      for (const s of palace.majorStars || []) {
+        stars.add(s.name);
+        if (s.mutagen) muts.add(s.mutagen);
+      }
+
+      for (const s of palace.minorStars || []) {
+        stars.add(s.name);
+        if (s.mutagen) muts.add(s.mutagen);
+      }
+
+      for (const s of palace.adjectiveStars || []) {
+        stars.add(s.name);
+        if (s.mutagen) muts.add(s.mutagen);
+      }
+
+      palStars[palace.index] = stars;
+      palMutagen[palace.index] = muts;
+    }
+  } else {
+    for (let i = 0; i < 12; i++) {
+      const palaceName = PALACE_NAMES[i];
+      const palace = chart.palace(palaceName, scope);
+
+      nameToIdx[palaceName] = palace.index;
+      idxToName[palace.index] = palaceName;
+      idxToBranch[palace.index] = palace.earthlyBranch;
+      idxToStem[palace.index] = palace.heavenlyStem;
+
+      const stars = new Set();
+      const muts = new Set();
+
+      // 收集各类星曜
+      for (const s of palace.majorStars || []) {
+        stars.add(s.name);
+        if (s.mutagen) muts.add(s.mutagen);
+      }
+
+      for (const s of palace.minorStars || []) {
+        stars.add(s.name);
+        if (s.mutagen) muts.add(s.mutagen);
+      }
+
+      for (const s of palace.adjectiveStars || []) {
+        stars.add(s.name);
+        if (s.mutagen) muts.add(s.mutagen);
+      }
+
+      palStars[palace.index] = stars;
+      palMutagen[palace.index] = muts;
+    }
   }
 
-  for (let i = 0; i < 12; i++) {
-    const palaceName = PALACE_NAMES[i];
-    const palace = astrolabe.palace(palaceName);
-    
-    nameToIdx[palace.name] = palace.index;
-    idxToBranch[palace.index] = palace.earthlyBranch;
-    idxToStem[palace.index] = palace.heavenlyStem;
-
-    const stars = new Set();
-    const muts = new Set();
-
-    // 收集各类星曜
-    for (const s of palace.majorStars || []) {
-      stars.add(s.name);
-      if (s.mutagen) muts.add(s.mutagen);
-    }
-    
-    for (const s of palace.minorStars || []) {
-      stars.add(s.name);
-      if (s.mutagen) muts.add(s.mutagen);
-    }
-    
-    for (const s of palace.adjectiveStars || []) {
-      stars.add(s.name);
-      if (s.mutagen) muts.add(s.mutagen);
-    }
-
-    palStars[palace.index] = stars;
-    palMutagen[palace.index] = muts;
-  }
-
-  return { palStars, palMutagen, nameToIdx, idxToBranch, idxToStem };
+  return { palStars, palMutagen, nameToIdx, idxToName, idxToBranch, idxToStem };
 }
 
 /**
@@ -453,14 +485,14 @@ function getPatternCopy(pid) {
 function hit(pid, name, strict, reason, involved) {
   const item = {
     id: pid,
-    name: name,
-    strict: strict,
+    // name: name,
+    // strict: strict,
     reason: reason,
-    involved: involved,
+    // involved: involved,
   };
   const copy = getPatternCopy(pid);
   if (copy) {
-    item.group = copy.group;
+    // item.group = copy.group;
     item.title = copy.title;
     item.blurb = copy.blurb;
   }
@@ -473,12 +505,10 @@ function hit(pid, name, strict, reason, involved) {
 
 /**
  * Main pattern detection function
- * @param {Object} astrolabe - The base astrolabe data (response["data"])
- * @param {Object} activeChart - Optional active chart data (十年/流年/流月/流日)
  * @returns {Array} List of detected patterns
  */
-export function detectPatterns(astrolabe, activeChart = null, activeScope = 'yearly') {
-  const { palStars, palMutagen, nameToIdx, idxToBranch, idxToStem } = buildMaps(astrolabe);
+export function detectPatterns(chart, scope = null) {
+  const { palStars, palMutagen, nameToIdx, idxToName, idxToBranch, idxToStem } = buildMaps(chart, scope);
   
   const ret = [];
   
@@ -551,7 +581,7 @@ export function detectPatterns(astrolabe, activeChart = null, activeScope = 'yea
   for (let i = 0; i < 12; i++) {
     if (starsIn(palStars, i, new Set(["紫微", "破军"])) && ["丑", "未"].includes(idxToBranch[i])) {
       ret.push(hit("zipo_tonggong", "紫破组合", true,
-        `${PALACE_NAMES[i]}同宫紫微+破军（${idxToBranch[i]}支）`, [PALACE_NAMES[i]]));
+        `${idxToName[i]}同宫紫微+破军（${idxToBranch[i]}支）`, [idxToName[i]]));
       break;
     }
   }
@@ -560,11 +590,11 @@ export function detectPatterns(astrolabe, activeChart = null, activeScope = 'yea
   for (let i = 0; i < 12; i++) {
     if (starsIn(palStars, i, new Set(["紫微", "贪狼"])) && ["卯", "酉"].includes(idxToBranch[i])) {
       ret.push(hit("zitan_tonggong", "紫贪组合", true,
-        `${PALACE_NAMES[i]}同宫紫微+贪狼（${idxToBranch[i]}支）`, [PALACE_NAMES[i]]));
+        `${idxToName[i]}同宫紫微+贪狼（${idxToBranch[i]}支）`, [idxToName[i]]));
       const triI = [i, _opp(i), (i + 4) % 12, (i + 8) % 12];
       if (!noShaJi(palStars, palMutagen, triI)) {
         ret.push(hit("jiju_maoyou", "极居卯酉", true,
-          `紫贪同宫（${idxToBranch[i]}），三方四正见煞/忌`, [PALACE_NAMES[i]]));
+          `紫贪同宫（${idxToBranch[i]}），三方四正见煞/忌`, [idxToName[i]]));
       }
       break;
     }
@@ -624,7 +654,7 @@ export function detectPatterns(astrolabe, activeChart = null, activeScope = 'yea
   for (let i = 0; i < 12; i++) {
     if (starsIn(palStars, i, new Set(["紫微", "天府"]))) {
       ret.push(hit("zifu_tonggong", "紫府同宫", true, 
-        `${PALACE_NAMES[i]}同宫见紫微+天府`, [PALACE_NAMES[i]]));
+        `${idxToName[i]}同宫见紫微+天府`, [idxToName[i]]));
       break;
     }
   }
@@ -694,7 +724,7 @@ export function detectPatterns(astrolabe, activeChart = null, activeScope = 'yea
   // 08 梁马飘荡（任一宫：天梁+天马 同宫）
   for (let i = 0; i < 12; i++) {
     if (starsIn(palStars, i, new Set(["天梁", "天马"]))) {
-      ret.push(hit("liangma_piaodang", "梁马飘荡", true, `${PALACE_NAMES[i]}同宫天梁+天马`, [PALACE_NAMES[i]]));
+      ret.push(hit("liangma_piaodang", "梁马飘荡", true, `${idxToName[i]}同宫天梁+天马`, [idxToName[i]]));
       break;
     }
   }
@@ -784,7 +814,7 @@ export function detectPatterns(astrolabe, activeChart = null, activeScope = 'yea
   // 13 众水朝东（任一宫：破军+文曲 同宫，且支∈寅/卯）
   for (let i = 0; i < 12; i++) {
     if (starsIn(palStars, i, new Set(["破军", "文曲"])) && ["寅", "卯"].includes(idxToBranch[i])) {
-      ret.push(hit("zhongshui_chaodong", "众水朝东", true, `${PALACE_NAMES[i]}同宫破军+文曲，支=${idxToBranch[i]}`, [PALACE_NAMES[i]]));
+      ret.push(hit("zhongshui_chaodong", "众水朝东", true, `${idxToName[i]}同宫破军+文曲，支=${idxToBranch[i]}`, [idxToName[i]]));
       break;
     }
   }
@@ -802,7 +832,7 @@ export function detectPatterns(astrolabe, activeChart = null, activeScope = 'yea
   let lmStrict = false;
   for (let i = 0; i < 12; i++) {
     if (starsIn(palStars, i, new Set(["禄存", "天马"]))) {
-      ret.push(hit("luma_jiaochi", "禄马交驰", true, `${PALACE_NAMES[i]}同宫禄存+天马`, [PALACE_NAMES[i]]));
+      ret.push(hit("luma_jiaochi", "禄马交驰", true, `${idxToName[i]}同宫禄存+天马`, [idxToName[i]]));
       lmStrict = true;
       break;
     }
@@ -815,7 +845,7 @@ export function detectPatterns(astrolabe, activeChart = null, activeScope = 'yea
         const j = _opp(i);
         if ((palStars[j] || new Set()).has("天马")) {
           ret.push(hit("luma_jiaochi_weak", "禄马交驰（弱）", false, 
-            `${PALACE_NAMES[i]}与对宫${PALACE_NAMES[j]}禄/马对拱`, [PALACE_NAMES[i], PALACE_NAMES[j]]));
+            `${idxToName[i]}与对宫${idxToName[j]}禄/马对拱`, [idxToName[i], idxToName[j]]));
           break;
         }
       }
@@ -828,7 +858,7 @@ export function detectPatterns(astrolabe, activeChart = null, activeScope = 'yea
   for (let i = 0; i < 12; i++) {
     if ((palMutagen[i] || new Set()).has("禄") && (palStars[i] || new Set()).has("天马")) {
       ret.push(hit("luma_jiaochi_hualu", "禄马交驰（化禄）", true,
-        `${PALACE_NAMES[i]}同宫化禄+天马`, [PALACE_NAMES[i]]));
+        `${idxToName[i]}同宫化禄+天马`, [idxToName[i]]));
       hualuStrict = true;
       break;
     }
@@ -839,7 +869,7 @@ export function detectPatterns(astrolabe, activeChart = null, activeScope = 'yea
         const j = _opp(i);
         if ((palStars[j] || new Set()).has("天马")) {
           ret.push(hit("luma_jiaochi_hualu_weak", "禄马交驰（化禄，对拱）", false,
-            `${PALACE_NAMES[i]}化禄 对拱 ${PALACE_NAMES[j]}天马`, [PALACE_NAMES[i], PALACE_NAMES[j]]));
+            `${idxToName[i]}化禄 对拱 ${idxToName[j]}天马`, [idxToName[i], idxToName[j]]));
           hualuStrict = true;
           break;
         }
@@ -860,13 +890,13 @@ export function detectPatterns(astrolabe, activeChart = null, activeScope = 'yea
   
   for (let i = 0; i < 12; i++) {
     if ((palStars[i] || new Set()).has("禄存") && palaceHasHuaLu(i)) {
-      ret.push(hit("luhe_yuanyang", "禄合鸳鸯", true, `${PALACE_NAMES[i]}同宫禄存+化禄`, [PALACE_NAMES[i]]));
+      ret.push(hit("luhe_yuanyang", "禄合鸳鸯", true, `${idxToName[i]}同宫禄存+化禄`, [idxToName[i]]));
       break;
     }
     const j = _opp(i);
     if ((palStars[i] || new Set()).has("禄存") && palaceHasHuaLu(j)) {
       ret.push(hit("luhe_yuanyang_weak", "禄合鸳鸯（对拱）", false, 
-        `${PALACE_NAMES[i]}禄存 对拱 ${PALACE_NAMES[j]}化禄`, [PALACE_NAMES[i], PALACE_NAMES[j]]));
+        `${idxToName[i]}禄存 对拱 ${idxToName[j]}化禄`, [idxToName[i], idxToName[j]]));
       break;
     }
   }
@@ -879,15 +909,15 @@ export function detectPatterns(astrolabe, activeChart = null, activeScope = 'yea
     
     if (mingHasMingLu && darkHasAnLu) {
       ret.push(hit("minglu_anlu", "明禄暗禄", true,
-        `命宫明禄（禄存/化禄），暗合宫亦见禄（宫=${PALACE_NAMES[iDark]}）`,
-        ["命宫", PALACE_NAMES[iDark]]));
+        `命宫明禄（禄存/化禄），暗合宫亦见禄（宫=${idxToName[iDark]}）`,
+        ["命宫", idxToName[iDark]]));
     }
   }
 
   // 18 禄马佩印（任一宫：禄存+天马+天相 同宫）
   for (let i = 0; i < 12; i++) {
     if (starsIn(palStars, i, new Set(["禄存", "天马", "天相"]))) {
-      ret.push(hit("luma_peiyin", "禄马佩印", true, `${PALACE_NAMES[i]}同宫禄存+天马+天相`, [PALACE_NAMES[i]]));
+      ret.push(hit("luma_peiyin", "禄马佩印", true, `${idxToName[i]}同宫禄存+天马+天相`, [idxToName[i]]));
       break;
     }
   }
@@ -929,7 +959,7 @@ export function detectPatterns(astrolabe, activeChart = null, activeScope = 'yea
   // 左右同宫
   for (let i = 0; i < 12; i++) {
     if (starsIn(palStars, i, new Set(["左辅", "右弼"]))) {
-      ret.push(hit("zuoyou_tonggong", "左右同宫", true, `${PALACE_NAMES[i]}同宫左辅+右弼`, [PALACE_NAMES[i]]));
+      ret.push(hit("zuoyou_tonggong", "左右同宫", true, `${idxToName[i]}同宫左辅+右弼`, [idxToName[i]]));
       break;
     }
   }
@@ -956,41 +986,18 @@ export function detectPatterns(astrolabe, activeChart = null, activeScope = 'yea
   if ((palMutagen[iMing] || new Set()).has("科") && iDark !== null &&
       ((palStars[iDark] || new Set()).has("禄存") || (palMutagen[iDark] || new Set()).has("禄"))) {
     ret.push(hit("keming_anlu", "科明暗禄", true, 
-      `命宫见化科；暗合宫见禄（${PALACE_NAMES[iDark]}）`, ["命宫", PALACE_NAMES[iDark]]));
+      `命宫见化科；暗合宫见禄（${idxToName[iDark]}）`, ["命宫", idxToName[iDark]]));
   }
 
-  // 23 禄衰马困（运限判，需 activeChart）
-  if (activeChart !== null) {
-    let aLuShuaiAny = false;
-    let aMaKunAny = false;
-
-    if (typeof activeChart.hasHoroscopeStars === 'function' && typeof activeChart.hasOneOfHoroscopeStars === 'function') {
-      // 使用 iztro FunctionalHoroscope 接口（按 year 口径）
-      for (const palName of PALACE_NAMES) {
-        const hasLu = activeChart.hasHoroscopeStars(palName, activeScope, ['禄存']);
-        const hasLoss = activeChart.hasOneOfHoroscopeStars(palName, activeScope, Array.from(KILL_OR_LOSS_SET));
-        if (hasLu && hasLoss) { aLuShuaiAny = true; }
-
-        const hasMa = activeChart.hasHoroscopeStars(palName, activeScope, ['天马']);
-        const hasRestraint = activeChart.hasOneOfHoroscopeStars(palName, activeScope, Array.from(RESTRAINT_SET));
-        const hasJi = (typeof activeChart.hasHoroscopeMutagen === 'function') ? activeChart.hasHoroscopeMutagen(palName, activeScope, '忌') : false;
-        if (hasMa && (hasRestraint || hasJi)) { aMaKunAny = true; }
-
-        if (aLuShuaiAny && aMaKunAny) break;
-      }
-    } else {
-      // 回退：尝试以普通 astrolabe 口径构建（若 activeChart 为完整星盘对象）
-      const { palStars: aStars, palMutagen: aMut } = buildMaps(activeChart);
+  // 23 禄衰马困（运限判）
+  for (let i = 0; i < 12; i++) {
+    if ((palStars[i] || new Set()).has("禄存") && anyStarIn(palStars, i, KILL_OR_LOSS_SET)) {
       for (let i = 0; i < 12; i++) {
-        if ((aStars[i] || new Set()).has("禄存") && anyStarIn(aStars, i, KILL_OR_LOSS_SET)) { aLuShuaiAny = true; break; }
+        if ((palStars[i] || new Set()).has("天马") && (anyStarIn(palStars, i, RESTRAINT_SET) || (palMutagen[i] && palMutagen[i].has("忌")))) {
+          ret.push(hit("lushuai_makun", "禄衰马困", true, "运盘同现：禄存遇耗/空/劫 + 天马遇煞/忌", ["运限盘"]));
+          break;
+        }
       }
-      for (let i = 0; i < 12; i++) {
-        if ((aStars[i] || new Set()).has("天马") && (anyStarIn(aStars, i, RESTRAINT_SET) || (aMut[i] && aMut[i].has("忌")))) { aMaKunAny = true; break; }
-      }
-    }
-
-    if (aLuShuaiAny && aMaKunAny) {
-      ret.push(hit("lushuai_makun", "禄衰马困", true, "运盘同现：禄存遇耗/空/劫 + 天马遇煞/忌", ["运限盘"]));
     }
   }
 
@@ -1007,16 +1014,16 @@ export function detectPatterns(astrolabe, activeChart = null, activeScope = 'yea
       if ((leftLoss && rightLoss) || oppJi) {
         ret.push(hit(
           "lu_feng_chongpo", "禄逢冲破", true,
-          `${PALACE_NAMES[i]}化禄，` + (oppJi ? "对宫见化忌冲照" : "左右邻宫空/劫夹破"),
-          [PALACE_NAMES[i]]
+          `${idxToName[i]}化禄，` + (oppJi ? "对宫见化忌冲照" : "左右邻宫空/劫夹破"),
+          [idxToName[i]]
         ));
         break;
       }
       if (selfLoss || leftLoss || rightLoss) {
         ret.push(hit(
           "lu_feng_chongpo_weak", "禄逢冲破（宽）", false,
-          `${PALACE_NAMES[i]}化禄，` + (selfLoss ? "同宫见空/劫" : "单侧邻宫空/劫"),
-          [PALACE_NAMES[i]]
+          `${idxToName[i]}化禄，` + (selfLoss ? "同宫见空/劫" : "单侧邻宫空/劫"),
+          [idxToName[i]]
         ));
         break;
       }

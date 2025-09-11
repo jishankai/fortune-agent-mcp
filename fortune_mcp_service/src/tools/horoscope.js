@@ -8,76 +8,59 @@ import { detectPatterns } from '../utils/patterns.js';
  * @param {Date} query_date - 查询日期
  * @param {Object} astrolabe - 星盘对象
  * @param {string} palace_name - 宫位名称
- * @param {boolean} isLite - 是否为轻量版本
  * @returns {Object} 格式化的运势数据
  */
-function getHoroscopeData(scope, query_date, astrolabe, palace_name, isLite = false) {
+function getHoroscopeData(scope, query_date, astrolabe, palace_name) {
   const horoscope = astrolabe.horoscope(query_date);
-  
+
   const result = {};
-  
-  if (!isLite) {
-    const formattedPalace = formatPalace(astrolabe.palace(palace_name));
-    const surroundedPalaces = astrolabe.surroundedPalaces(palace_name);
-    const formattedSurroundedPalaces = formatSurroundedPalaces(surroundedPalaces);
-    
-    // Detect patterns in the base chart
-    const basePatterns = detectPatterns(astrolabe);
-    
-    result["星盘基本信息"] = getAstrolabeBasicInfo(astrolabe);
-    result["本命盘"] = {
-      "目标宫位": formattedPalace,
-      "三方四正": formattedSurroundedPalaces,
-    };
-    result["本命格局"] = basePatterns;
-  }
-  
-  // 根据时间框架添加对应的运势数据
-  const scopes = ['daily', 'monthly', 'yearly', 'decadal'];
-  
-  for (const sc of scopes) {
-    const shouldInclude = 
-      (scope === 'daily' && ['daily', 'monthly', 'yearly', 'decadal'].includes(sc)) ||
-      (scope === 'monthly' && ['monthly', 'yearly', 'decadal'].includes(sc)) ||
-      (scope === 'yearly' && ['yearly', 'decadal'].includes(sc)) ||
-      (scope === 'decadal' && sc === 'decadal');
-      
-    if (shouldInclude) {
-      const scFormattedPalace = formatPalace(horoscope.palace(palace_name, sc));
-      const scSurroundedPalaces = astrolabe.surroundedPalaces(palace_name);
-      const scFormattedSurroundedPalaces = formatSurroundedPalaces(scSurroundedPalaces);
-      
-      const scopeName = {
-        'daily': '流日盘',
-        'monthly': '流月盘', 
-        'yearly': '流年盘',
-        'decadal': '大限盘'
-      }[sc];
-      
-      // Detect patterns for this temporal scope using active chart
-      // Note: Pass scope to align with FunctionalHoroscope lookups
-      const temporalPatterns = detectPatterns(astrolabe, horoscope, sc);
-      
-      result[scopeName] = {
-        "目标宫位": scFormattedPalace,
-        "三方四正": scFormattedSurroundedPalaces,
-        "运限格局": temporalPatterns
-      };
-    }
-  }
-  
-  // 添加小限盘
-  if (!isLite || scope === 'daily' || scope === 'monthly' || scope === 'yearly') {
-    const ageFormattedPalace = formatPalace(horoscope.agePalace());
-    const ageSurroundedPalaces = astrolabe.surroundedPalaces(horoscope.agePalace().name);
-    const ageFormattedSurroundedPalaces = formatSurroundedPalaces(ageSurroundedPalaces);
-    
-    result["小限盘"] = {
-      "目标宫位": ageFormattedPalace,
-      "三方四正": ageFormattedSurroundedPalaces,
-    };
-  }
-  
+  result["星盘基本信息"] = getAstrolabeBasicInfo(astrolabe);
+
+  console.log(`查询${scope}盘，目标宫位：${palace_name}，查询日期：${query_date.toISOString().split('T')[0]}`);
+  const scFormattedPalace = formatPalace(horoscope.palace(palace_name, scope), horoscope[scope], scope);
+  const scSurroundedPalaces = horoscope.surroundPalaces(palace_name, scope);
+  const scFormattedSurroundedPalaces = formatSurroundedPalaces(scSurroundedPalaces, horoscope[scope], scope);
+
+  const scopeName = {
+    'daily': '流日盘',
+    'monthly': '流月盘',
+    'yearly': '流年盘',
+    'decadal': '大限盘'
+  }[scope];
+
+  const scopePatterns = detectPatterns(horoscope, scope);
+
+  result[scopeName] = {
+    "目标宫位": scFormattedPalace,
+    "三方四正": scFormattedSurroundedPalaces,
+    "运限格局": scopePatterns
+  };
+
+  // // 添加小限盘
+  // if (scope === 'decadal') {
+  //   const ageFormattedPalace = formatPalace(horoscope.agePalace(), horoscope[scope], scope);
+  //   const ageSurroundedPalaces = horoscope.surroundPalaces(horoscope.agePalace().name, 'age');
+  //   const ageFormattedSurroundedPalaces = formatSurroundedPalaces(ageSurroundedPalaces, horoscope[scope], scope);
+
+  //   result["小限盘"] = {
+  //     "目标宫位": ageFormattedPalace,
+  //     "三方四正": ageFormattedSurroundedPalaces,
+  //   };
+  // }
+
+  // if (scope === 'yearly') {
+  //   const decadalScopePatterns = detectPatterns(horoscope, 'decadal');
+  //   const decadalFormattedPalace = formatPalace(horoscope.palace(palace_name, 'decadal'), horoscope['decadal'], 'decadal');
+  //   const decadalSurroundedPalaces = horoscope.surroundPalaces(palace_name, 'decadal');
+  //   const decadalFormattedSurroundedPalaces = formatSurroundedPalaces(decadalSurroundedPalaces, horoscope['decadal'], 'decadal');
+
+  //   result["大限盘"] = {
+  //     "目标宫位": decadalFormattedPalace,
+  //     "三方四正": decadalFormattedSurroundedPalaces,
+  //     "运限格局": decadalScopePatterns
+  //   };
+  // }
+
   return result;
 }
 
@@ -92,7 +75,7 @@ export async function getHoroscope({ birth_date, birth_time, gender, city, is_lu
       is_leap
     });
     
-    const query_date = new Date(query_year, 0, 1);
+    const query_date = new Date(query_year, 2, 1);
     const data = getHoroscopeData('decadal', query_date, astrolabe, palace_name);
     
     return {
@@ -123,7 +106,7 @@ export async function getYearlyHoroscope({ birth_date, birth_time, gender, city,
       is_leap
     });
 
-    const query_date = new Date(query_year, 0, 1);
+    const query_date = new Date(query_year, 2, 1);
     const data = getHoroscopeData('yearly', query_date, astrolabe, palace_name);
 
     return {
@@ -200,99 +183,6 @@ export async function getDailyHoroscope({ birth_date, birth_time, gender, city, 
       success: false,
       error: error.message,
       message: '流日运势生成失败',
-      time: new Date().toISOString()
-    };
-  }
-}
-
-export async function getYearlyHoroscopeLite({ birth_date, birth_time, gender, city, is_lunar = false, is_leap = false, palace_name, query_year }) {
-  try {
-    const astrolabe = await generateAstrolabe({
-      birth_date,
-      time: birth_time,
-      gender,
-      city,
-      is_lunar,
-      is_leap
-    });
-
-    const query_date = new Date(query_year, 0, 1);
-    const data = getHoroscopeData('yearly', query_date, astrolabe, palace_name, true);
-
-    return {
-      success: true,
-      data,
-      message: `${palace_name}择时流年查询成功（${query_year}年）`,
-      time: new Date().toISOString()
-    };
-  } catch (error) {
-    console.error(error);
-    return {
-      success: false,
-      error: error.message,
-      message: '择时流年查询失败',
-      time: new Date().toISOString()
-    };
-  }
-}
-
-export async function getMonthlyHoroscopeLite({ birth_date, birth_time, gender, city, is_lunar = false, is_leap = false, palace_name, query_year, query_month }) {
-  try {
-    const astrolabe = await generateAstrolabe({
-      birth_date,
-      time: birth_time,
-      gender,
-      city,
-      is_lunar,
-      is_leap
-    });
-
-    const query_date = new Date(query_year, query_month - 1, 1);
-    const data = getHoroscopeData('monthly', query_date, astrolabe, palace_name, true);
-
-    return {
-      success: true,
-      data,
-      message: `${palace_name}择时流月查询成功（${query_year}年${query_month}月）`,
-      time: new Date().toISOString()
-    };
-  } catch (error) {
-    console.error(error);
-    return {
-      success: false,
-      error: error.message,
-      message: '择时流月查询失败',
-      time: new Date().toISOString()
-    };
-  }
-}
-
-export async function getDailyHoroscopeLite({ birth_date, birth_time, gender, city, is_lunar = false, is_leap = false, palace_name, query_year, query_month, query_day }) {
-  try {
-    const astrolabe = await generateAstrolabe({
-      birth_date,
-      time: birth_time,
-      gender,
-      city,
-      is_lunar,
-      is_leap
-    });
-
-    const query_date = new Date(query_year, query_month - 1, query_day);
-    const data = getHoroscopeData('daily', query_date, astrolabe, palace_name, true);
-
-    return {
-      success: true,
-      data,
-      message: `${palace_name}择时流日查询成功（${query_year}年${query_month}月${query_day}日）`,
-      time: new Date().toISOString()
-    };
-  } catch (error) {
-    console.error(error);
-    return {
-      success: false,
-      error: error.message,
-      message: '择时流日查询失败',
       time: new Date().toISOString()
     };
   }
