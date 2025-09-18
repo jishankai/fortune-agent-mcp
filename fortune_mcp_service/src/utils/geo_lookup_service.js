@@ -617,36 +617,648 @@ const OVERSEAS_CHINESE_REGIONS = {
     "马六甲": { lat: 2.1896, lng: 102.2501, level: "市", aliases: ["马六甲", "Malacca", "Melaka"] },
     "怡保": { lat: 4.5975, lng: 101.0901, level: "市", aliases: ["怡保", "Ipoh"] },
     "古晋": { lat: 1.5533, lng: 110.3592, level: "市", aliases: ["古晋", "Kuching"] },
-    "亚庇": { lat: 5.9804, lng: 116.0735, level: "市", aliases: ["亚庇", "Kota Kinabalu"] }
+    "亚庇": { lat: 5.9804, lng: 116.0735, level: "市", aliases: ["亚庇", "Kota Kinabalu"] },
+    "八打灵再也": { lat: 3.1073, lng: 101.6067, level: "市", aliases: ["八打灵再也", "Petaling Jaya", "PJ"] },
+    "莎阿南": { lat: 3.0738, lng: 101.5183, level: "市", aliases: ["莎阿南", "Shah Alam"] },
+    "梳邦再也": { lat: 3.0733, lng: 101.5185, level: "市", aliases: ["梳邦再也", "Subang Jaya"] }
   },
 
   "泰国": {
     "曼谷": { lat: 13.7563, lng: 100.5018, level: "市", aliases: ["曼谷", "Bangkok"] },
     "清迈": { lat: 18.7883, lng: 98.9853, level: "市", aliases: ["清迈", "Chiang Mai"] },
-    "普吉": { lat: 7.8804, lng: 98.3923, level: "市", aliases: ["普吉", "Phuket"] }
+    "普吉": { lat: 7.8804, lng: 98.3923, level: "市", aliases: ["普吉", "Phuket"] },
+    "芭提雅": { lat: 12.9236, lng: 100.8825, level: "市", aliases: ["芭提雅", "Pattaya"] }
+  },
+
+  // === 东南亚新增 ===
+  "柬埔寨": {
+    "金边": { lat: 11.5564, lng: 104.9282, level: "市", aliases: ["金边", "Phnom Penh"] },
+    "暹粒": { lat: 13.3671, lng: 103.8448, level: "市", aliases: ["暹粒", "Siem Reap"] }
+  },
+  "老挝": {
+    "万象": { lat: 17.9757, lng: 102.6331, level: "市", aliases: ["万象", "Vientiane"] },
+    "琅勃拉邦": { lat: 19.8860, lng: 102.1350, level: "市", aliases: ["琅勃拉邦", "Luang Prabang"] }
+  },
+  "文莱": {
+    "斯里巴加湾市": { lat: 4.9031, lng: 114.9398, level: "市", aliases: ["斯里巴加湾市", "Bandar Seri Begawan"] }
+  },
+  "东帝汶": {
+    "帝力": { lat: -8.5569, lng: 125.5603, level: "市", aliases: ["帝力", "Dili"] }
+  },
+  "马尔代夫": {
+    "马累": { lat: 4.1755, lng: 73.5093, level: "市", aliases: ["马累", "Male"] }
+  },
+  "蒙古国": {
+    "乌兰巴托": { lat: 47.8864, lng: 106.9057, level: "市", aliases: ["乌兰巴托", "Ulaanbaatar", "Ulan Bator"] }
+  },
+  "朝鲜": {
+    "平壤": { lat: 39.0392, lng: 125.7625, level: "市", aliases: ["平壤", "Pyongyang"] }
   },
 
   "印度尼西亚": {
     "雅加达": { lat: -6.2088, lng: 106.8456, level: "市", aliases: ["雅加达", "Jakarta"] },
     "泗水": { lat: -7.2575, lng: 112.7521, level: "市", aliases: ["泗水", "Surabaya"] },
-    "棉兰": { lat: 3.5952, lng: 98.6722, level: "市", aliases: ["棉兰", "Medan"] }
+    "棉兰": { lat: 3.5952, lng: 98.6722, level: "市", aliases: ["棉兰", "Medan"] },
+    "万隆": { lat: -6.9175, lng: 107.6191, level: "市", aliases: ["万隆", "Bandung"] },
+    "日惹": { lat: -7.7956, lng: 110.3695, level: "市", aliases: ["日惹", "Yogyakarta"] },
+    "登巴萨": { lat: -8.6500, lng: 115.2167, level: "市", aliases: ["登巴萨", "Denpasar", "Bali", "巴厘岛"] },
+    "望加锡": { lat: -5.1477, lng: 119.4327, level: "市", aliases: ["望加锡", "Makassar"] }
   },
 
   "菲律宾": {
     "马尼拉": { lat: 14.5995, lng: 120.9842, level: "市", aliases: ["马尼拉", "Manila"] },
-    "宿务": { lat: 10.3157, lng: 123.8854, level: "市", aliases: ["宿务", "Cebu"] }
+    "宿务": { lat: 10.3157, lng: 123.8854, level: "市", aliases: ["宿务", "Cebu"] },
+    "达沃": { lat: 7.1907, lng: 125.4553, level: "市", aliases: ["达沃", "Davao"] },
+    "奎松市": { lat: 14.6760, lng: 121.0437, level: "市", aliases: ["奎松市", "Quezon City"] },
+    "马卡蒂": { lat: 14.5547, lng: 121.0244, level: "市", aliases: ["马卡蒂", "Makati"] },
+    "塔吉格": { lat: 14.5204, lng: 121.0537, level: "市", aliases: ["塔吉格", "Taguig"] }
   },
 
   "缅甸": {
-    "仰光": { lat: 16.8661, lng: 96.1951, level: "市", aliases: ["仰光", "Yangon"] }
+    "仰光": { lat: 16.8661, lng: 96.1951, level: "市", aliases: ["仰光", "Yangon"] },
+    "内比都": { lat: 19.7633, lng: 96.0785, level: "市", aliases: ["内比都", "Naypyidaw", "Nay Pyi Taw"] },
+    "曼德勒": { lat: 21.9588, lng: 96.0891, level: "市", aliases: ["曼德勒", "Mandalay"] }
   },
 
   "越南": {
     "胡志明市": { lat: 10.8231, lng: 106.6297, level: "市", aliases: ["胡志明市", "Ho Chi Minh City", "西贡"] },
-    "河内": { lat: 21.0285, lng: 105.8542, level: "市", aliases: ["河内", "Hanoi"] }
+    "河内": { lat: 21.0285, lng: 105.8542, level: "市", aliases: ["河内", "Hanoi"] },
+    "岘港": { lat: 16.0544, lng: 108.2022, level: "市", aliases: ["岘港", "Da Nang", "Danang"] },
+    "海防": { lat: 20.8449, lng: 106.6881, level: "市", aliases: ["海防", "Haiphong", "Hai Phong"] },
+    "芽庄": { lat: 12.2388, lng: 109.1967, level: "市", aliases: ["芽庄", "Nha Trang"] },
+    "顺化": { lat: 16.4637, lng: 107.5909, level: "市", aliases: ["顺化", "Hue"] }
   },
 
-  // === 北美华人聚居地 ===
+  // === 欧洲华人聚居地 ===
+  "法国": {
+    "巴黎": { lat: 48.8566, lng: 2.3522, level: "市", aliases: ["巴黎", "Paris"] },
+    "马赛": { lat: 43.2965, lng: 5.3698, level: "市", aliases: ["马赛", "Marseille"] },
+    "里昂": { lat: 45.7640, lng: 4.8357, level: "市", aliases: ["里昂", "Lyon"] },
+    "尼斯": { lat: 43.7102, lng: 7.2620, level: "市", aliases: ["尼斯", "Nice"] },
+    "图卢兹": { lat: 43.6047, lng: 1.4442, level: "市", aliases: ["图卢兹", "Toulouse"] },
+    "波尔多": { lat: 44.8378, lng: -0.5792, level: "市", aliases: ["波尔多", "Bordeaux"] },
+    "里尔": { lat: 50.6292, lng: 3.0573, level: "市", aliases: ["里尔", "Lille"] },
+    "南特": { lat: 47.2184, lng: -1.5536, level: "市", aliases: ["南特", "Nantes"] },
+    "斯特拉斯堡": { lat: 48.5734, lng: 7.7521, level: "市", aliases: ["斯特拉斯堡", "Strasbourg"] },
+    "蒙彼利埃": { lat: 43.6108, lng: 3.8767, level: "市", aliases: ["蒙彼利埃", "Montpellier"] },
+    "格勒诺布尔": { lat: 45.1885, lng: 5.7245, level: "市", aliases: ["格勒诺布尔", "Grenoble"] }
+  },
+
+  // === 大洋洲华人聚居地 ===
+  "澳大利亚": {
+    "悉尼": { lat: -33.8688, lng: 151.2093, level: "市", aliases: ["悉尼", "Sydney"] },
+    "墨尔本": { lat: -37.8136, lng: 144.9631, level: "市", aliases: ["墨尔本", "Melbourne"] },
+    "布里斯班": { lat: -27.4698, lng: 153.0251, level: "市", aliases: ["布里斯班", "Brisbane"] },
+    "珀斯": { lat: -31.9505, lng: 115.8605, level: "市", aliases: ["珀斯", "Perth"] },
+    "阿德莱德": { lat: -34.9285, lng: 138.6007, level: "市", aliases: ["阿德莱德", "Adelaide"] },
+    "堪培拉": { lat: -35.2809, lng: 149.1300, level: "市", aliases: ["堪培拉", "Canberra"] },
+    "黄金海岸": { lat: -28.0167, lng: 153.4000, level: "市", aliases: ["黄金海岸", "Gold Coast"] },
+    "纽卡斯尔": { lat: -32.9283, lng: 151.7817, level: "市", aliases: ["纽卡斯尔", "Newcastle"] },
+    "霍巴特": { lat: -42.8821, lng: 147.3272, level: "市", aliases: ["霍巴特", "Hobart"] },
+    "达尔文": { lat: -12.4634, lng: 130.8456, level: "市", aliases: ["达尔文", "Darwin"] }
+  },
+
+  "新西兰": {
+    "奥克兰": { lat: -36.8485, lng: 174.7633, level: "市", aliases: ["奥克兰", "Auckland"] },
+    "惠灵顿": { lat: -41.2865, lng: 174.7762, level: "市", aliases: ["惠灵顿", "Wellington"] },
+    "基督城": { lat: -43.5321, lng: 172.6362, level: "市", aliases: ["基督城", "Christchurch"] },
+    "汉密尔顿": { lat: -37.7870, lng: 175.2793, level: "市", aliases: ["汉密尔顿", "Hamilton"] },
+    "达尼丁": { lat: -45.8788, lng: 170.5028, level: "市", aliases: ["达尼丁", "Dunedin"] },
+    "陶朗加": { lat: -37.6878, lng: 176.1651, level: "市", aliases: ["陶朗加", "Tauranga"] },
+    "皇后镇": { lat: -45.0312, lng: 168.6626, level: "市", aliases: ["皇后镇", "Queenstown"] }
+  },
+
+  // === 其他地区华人聚居地 ===
+  "日本": {
+    "东京": { lat: 35.6762, lng: 139.6503, level: "市", aliases: ["东京", "Tokyo"] },
+    "大阪": { lat: 34.6937, lng: 135.5023, level: "市", aliases: ["大阪", "Osaka"] },
+    "横滨": { lat: 35.4437, lng: 139.6380, level: "市", aliases: ["横滨", "Yokohama"] },
+    "名古屋": { lat: 35.1815, lng: 136.9066, level: "市", aliases: ["名古屋", "Nagoya"] },
+    "京都": { lat: 35.0116, lng: 135.7681, level: "市", aliases: ["京都", "Kyoto"] },
+    "札幌": { lat: 43.0618, lng: 141.3545, level: "市", aliases: ["札幌", "Sapporo"] },
+    "福冈": { lat: 33.5904, lng: 130.4017, level: "市", aliases: ["福冈", "Fukuoka"] },
+    "广岛": { lat: 34.3853, lng: 132.4553, level: "市", aliases: ["广岛", "Hiroshima"] },
+    "仙台": { lat: 38.2682, lng: 140.8694, level: "市", aliases: ["仙台", "Sendai"] },
+    "神户": { lat: 34.6901, lng: 135.1955, level: "市", aliases: ["神户", "Kobe"] }
+  },
+
+  "韩国": {
+    "首尔": { lat: 37.5665, lng: 126.9780, level: "市", aliases: ["首尔", "Seoul", "汉城"] },
+    "釜山": { lat: 35.1796, lng: 129.0756, level: "市", aliases: ["釜山", "Busan"] },
+    "仁川": { lat: 37.4563, lng: 126.7052, level: "市", aliases: ["仁川", "Incheon"] },
+    "大邱": { lat: 35.8714, lng: 128.6014, level: "市", aliases: ["大邱", "Daegu"] },
+    "大田": { lat: 36.3504, lng: 127.3845, level: "市", aliases: ["大田", "Daejeon"] },
+    "光州": { lat: 35.1595, lng: 126.8526, level: "市", aliases: ["光州", "Gwangju"] },
+    "蔚山": { lat: 35.5384, lng: 129.3114, level: "市", aliases: ["蔚山", "Ulsan"] },
+    "水原": { lat: 37.2636, lng: 127.0286, level: "市", aliases: ["水原", "Suwon"] }
+  },
+
+  "南非": {
+    "约翰内斯堡": { lat: -26.2041, lng: 28.0473, level: "市", aliases: ["约翰内斯堡", "Johannesburg"] },
+    "开普敦": { lat: -33.9249, lng: 18.4241, level: "市", aliases: ["开普敦", "Cape Town"] },
+    "比勒陀利亚": { lat: -25.7479, lng: 28.2293, level: "市", aliases: ["比勒陀利亚", "Pretoria"] },
+    "德班": { lat: -29.8587, lng: 31.0218, level: "市", aliases: ["德班", "Durban"] }
+  },
+
+  // === 欧洲主要国家与城市 ===
+  "俄罗斯": {
+    "莫斯科": { lat: 55.7558, lng: 37.6173, level: "市", aliases: ["莫斯科", "Moscow"] },
+    "圣彼得堡": { lat: 59.9311, lng: 30.3609, level: "市", aliases: ["圣彼得堡", "Saint Petersburg", "St Petersburg"] },
+    "新西伯利亚": { lat: 55.0084, lng: 82.9357, level: "市", aliases: ["新西伯利亚", "Novosibirsk"] },
+    "叶卡捷琳堡": { lat: 56.8389, lng: 60.6057, level: "市", aliases: ["叶卡捷琳堡", "Yekaterinburg", "Ekaterinburg"] },
+    "喀山": { lat: 55.7903, lng: 49.1125, level: "市", aliases: ["喀山", "Kazan"] },
+    "下诺夫哥罗德": { lat: 56.2965, lng: 43.9361, level: "市", aliases: ["下诺夫哥罗德", "Nizhny Novgorod"] },
+    "符拉迪沃斯托克": { lat: 43.1155, lng: 131.8855, level: "市", aliases: ["符拉迪沃斯托克", "Vladivostok"] }
+  },
+  "乌克兰": {
+    "基辅": { lat: 50.4501, lng: 30.5234, level: "市", aliases: ["基辅", "Kyiv", "Kiev"] },
+    "利沃夫": { lat: 49.8397, lng: 24.0297, level: "市", aliases: ["利沃夫", "Lviv", "Lwow"] },
+    "敖德萨": { lat: 46.4825, lng: 30.7233, level: "市", aliases: ["敖德萨", "Odessa", "Odesa"] },
+    "哈尔科夫": { lat: 49.9935, lng: 36.2304, level: "市", aliases: ["哈尔科夫", "Kharkiv"] },
+    "第聂伯": { lat: 48.4647, lng: 35.0462, level: "市", aliases: ["第聂伯", "Dnipro"] }
+  },
+  "瑞士": {
+    "苏黎世": { lat: 47.3769, lng: 8.5417, level: "市", aliases: ["苏黎世", "Zurich", "Zürich"] },
+    "日内瓦": { lat: 46.2044, lng: 6.1432, level: "市", aliases: ["日内瓦", "Geneva"] },
+    "巴塞尔": { lat: 47.5596, lng: 7.5886, level: "市", aliases: ["巴塞尔", "Basel"] },
+    "伯尔尼": { lat: 46.9480, lng: 7.4474, level: "市", aliases: ["伯尔尼", "Bern", "Berne"] },
+    "洛桑": { lat: 46.5197, lng: 6.6323, level: "市", aliases: ["洛桑", "Lausanne"] },
+    "卢塞恩": { lat: 47.0502, lng: 8.3093, level: "市", aliases: ["卢塞恩", "Lucerne"] },
+    "卢加诺": { lat: 46.0037, lng: 8.9511, level: "市", aliases: ["卢加诺", "Lugano"] }
+  },
+  // 奥地利
+  "奥地利": {
+    "维也纳": { lat: 48.2082, lng: 16.3738, level: "市", aliases: ["维也纳", "Vienna", "Wien"] },
+    "萨尔茨堡": { lat: 47.8095, lng: 13.0550, level: "市", aliases: ["萨尔茨堡", "Salzburg"] },
+    "格拉茨": { lat: 47.0707, lng: 15.4395, level: "市", aliases: ["格拉茨", "Graz"] },
+    "林茨": { lat: 48.3069, lng: 14.2858, level: "市", aliases: ["林茨", "Linz"] },
+    "因斯布鲁克": { lat: 47.2692, lng: 11.4041, level: "市", aliases: ["因斯布鲁克", "Innsbruck"] }
+  },
+  // 北欧
+  "瑞典": {
+    "斯德哥尔摩": { lat: 59.3293, lng: 18.0686, level: "市", aliases: ["斯德哥尔摩", "Stockholm"] },
+    "哥德堡": { lat: 57.7089, lng: 11.9746, level: "市", aliases: ["哥德堡", "Gothenburg", "Göteborg"] },
+    "马尔默": { lat: 55.60498, lng: 13.00382, level: "市", aliases: ["马尔默", "Malmö", "Malmo"] },
+    "乌普萨拉": { lat: 59.8586, lng: 17.6389, level: "市", aliases: ["乌普萨拉", "Uppsala"] }
+  },
+  "挪威": {
+    "奥斯陆": { lat: 59.9139, lng: 10.7522, level: "市", aliases: ["奥斯陆", "Oslo"] },
+    "卑尔根": { lat: 60.3913, lng: 5.3221, level: "市", aliases: ["卑尔根", "Bergen"] },
+    "特隆赫姆": { lat: 63.4305, lng: 10.3951, level: "市", aliases: ["特隆赫姆", "Trondheim"] },
+    "斯塔万格": { lat: 58.969975, lng: 5.733107, level: "市", aliases: ["斯塔万格", "Stavanger"] }
+  },
+  "芬兰": {
+    "赫尔辛基": { lat: 60.1699, lng: 24.9384, level: "市", aliases: ["赫尔辛基", "Helsinki"] },
+    "坦佩雷": { lat: 61.4978, lng: 23.7610, level: "市", aliases: ["坦佩雷", "Tampere"] },
+    "埃斯波": { lat: 60.2055, lng: 24.6559, level: "市", aliases: ["埃斯波", "Espoo"] }
+  },
+  "丹麦": {
+    "哥本哈根": { lat: 55.6761, lng: 12.5683, level: "市", aliases: ["哥本哈根", "Copenhagen", "København"] },
+    "奥胡斯": { lat: 56.1629, lng: 10.2039, level: "市", aliases: ["奥胡斯", "Aarhus"] },
+    "欧登塞": { lat: 55.4038, lng: 10.4024, level: "市", aliases: ["欧登塞", "Odense"] }
+  },
+  // 西欧补充
+  "葡萄牙": {
+    "里斯本": { lat: 38.7223, lng: -9.1393, level: "市", aliases: ["里斯本", "Lisbon", "Lisboa"] },
+    "波尔图": { lat: 41.1579, lng: -8.6291, level: "市", aliases: ["波尔图", "Porto", "Oporto"] },
+    "科英布拉": { lat: 40.2033, lng: -8.4103, level: "市", aliases: ["科英布拉", "Coimbra"] },
+    "法鲁": { lat: 37.0194, lng: -7.9304, level: "市", aliases: ["法鲁", "Faro"] }
+  },
+  "比利时": {
+    "布鲁塞尔": { lat: 50.8503, lng: 4.3517, level: "市", aliases: ["布鲁塞尔", "Brussels", "Bruxelles"] },
+    "安特卫普": { lat: 51.2194, lng: 4.4025, level: "市", aliases: ["安特卫普", "Antwerp", "Antwerpen"] },
+    "根特": { lat: 51.0543, lng: 3.7174, level: "市", aliases: ["根特", "Ghent", "Gent"] },
+    "列日": { lat: 50.6326, lng: 5.5797, level: "市", aliases: ["列日", "Liège", "Liege"] }
+  },
+  "波兰": {
+    "华沙": { lat: 52.2297, lng: 21.0122, level: "市", aliases: ["华沙", "Warsaw", "Warszawa"] },
+    "克拉科夫": { lat: 50.0647, lng: 19.9450, level: "市", aliases: ["克拉科夫", "Krakow", "Kraków"] },
+    "弗罗茨瓦夫": { lat: 51.1079, lng: 17.0385, level: "市", aliases: ["弗罗茨瓦夫", "Wroclaw", "Wrocław"] },
+    "格但斯克": { lat: 54.3520, lng: 18.6466, level: "市", aliases: ["格但斯克", "Gdansk", "Gdańsk"] },
+    "波兹南": { lat: 52.4064, lng: 16.9252, level: "市", aliases: ["波兹南", "Poznan", "Poznań"] },
+    "罗兹": { lat: 51.7592, lng: 19.4550, level: "市", aliases: ["罗兹", "Lodz", "Łódź"] }
+  },
+  "捷克": {
+    "布拉格": { lat: 50.0755, lng: 14.4378, level: "市", aliases: ["布拉格", "Prague", "Praha"] },
+    "布尔诺": { lat: 49.1951, lng: 16.6068, level: "市", aliases: ["布尔诺", "Brno"] }
+  },
+  "匈牙利": {
+    "布达佩斯": { lat: 47.4979, lng: 19.0402, level: "市", aliases: ["布达佩斯", "Budapest"] },
+    "德布勒森": { lat: 47.5316, lng: 21.6273, level: "市", aliases: ["德布勒森", "Debrecen"] },
+    "塞格德": { lat: 46.2530, lng: 20.1414, level: "市", aliases: ["塞格德", "Szeged"] }
+  },
+  "希腊": {
+    "雅典": { lat: 37.9838, lng: 23.7275, level: "市", aliases: ["雅典", "Athens"] },
+    "塞萨洛尼基": { lat: 40.6401, lng: 22.9444, level: "市", aliases: ["塞萨洛尼基", "Thessaloniki"] }
+  },
+  "罗马尼亚": {
+    "布加勒斯特": { lat: 44.4268, lng: 26.1025, level: "市", aliases: ["布加勒斯特", "Bucharest", "București"] }
+  },
+  "保加利亚": {
+    "索非亚": { lat: 42.6977, lng: 23.3219, level: "市", aliases: ["索非亚", "Sofia"] }
+  },
+  "塞尔维亚": {
+    "贝尔格莱德": { lat: 44.7866, lng: 20.4489, level: "市", aliases: ["贝尔格莱德", "Belgrade", "Beograd"] }
+  },
+  "克罗地亚": {
+    "萨格勒布": { lat: 45.8150, lng: 15.9819, level: "市", aliases: ["萨格勒布", "Zagreb"] }
+  },
+  "斯洛文尼亚": {
+    "卢布尔雅那": { lat: 46.0569, lng: 14.5058, level: "市", aliases: ["卢布尔雅那", "Ljubljana"] }
+  },
+  "斯洛伐克": {
+    "布拉迪斯拉发": { lat: 48.1486, lng: 17.1077, level: "市", aliases: ["布拉迪斯拉发", "Bratislava"] }
+  },
+  "波斯尼亚和黑塞哥维那": {
+    "萨拉热窝": { lat: 43.8563, lng: 18.4131, level: "市", aliases: ["萨拉热窝", "Sarajevo"] }
+  },
+  "北马其顿": {
+    "斯科普里": { lat: 41.9981, lng: 21.4254, level: "市", aliases: ["斯科普里", "Skopje"] }
+  },
+  "阿尔巴尼亚": {
+    "地拉那": { lat: 41.3275, lng: 19.8189, level: "市", aliases: ["地拉那", "Tirana"] }
+  },
+  "黑山": {
+    "波德戈里察": { lat: 42.4304, lng: 19.2594, level: "市", aliases: ["波德戈里察", "Podgorica"] }
+  },
+  "科索沃": {
+    "普里什蒂纳": { lat: 42.6629, lng: 21.1655, level: "市", aliases: ["普里什蒂纳", "Pristina", "Prishtina"] }
+  },
+  "立陶宛": {
+    "维尔纽斯": { lat: 54.6872, lng: 25.2797, level: "市", aliases: ["维尔纽斯", "Vilnius"] }
+  },
+  "拉脱维亚": {
+    "里加": { lat: 56.9496, lng: 24.1052, level: "市", aliases: ["里加", "Riga"] }
+  },
+  "爱沙尼亚": {
+    "塔林": { lat: 59.4370, lng: 24.7536, level: "市", aliases: ["塔林", "Tallinn"] }
+  },
+  "爱尔兰": {
+    "都柏林": { lat: 53.3498, lng: -6.2603, level: "市", aliases: ["都柏林", "Dublin"] },
+    "科克": { lat: 51.8985, lng: -8.4756, level: "市", aliases: ["科克", "Cork"] },
+    "戈尔韦": { lat: 53.2707, lng: -9.0568, level: "市", aliases: ["戈尔韦", "Galway"] }
+  },
+  "意大利": {
+    "罗马": { lat: 41.9028, lng: 12.4964, level: "市", aliases: ["罗马", "Rome"] },
+    "米兰": { lat: 45.4642, lng: 9.1900, level: "市", aliases: ["米兰", "Milan"] },
+    "那不勒斯": { lat: 40.8518, lng: 14.2681, level: "市", aliases: ["那不勒斯", "Naples", "Napoli"] },
+    "都灵": { lat: 45.0703, lng: 7.6869, level: "市", aliases: ["都灵", "Turin", "Torino"] },
+    "佛罗伦萨": { lat: 43.7696, lng: 11.2558, level: "市", aliases: ["佛罗伦萨", "Florence", "Firenze"] },
+    "威尼斯": { lat: 45.4408, lng: 12.3155, level: "市", aliases: ["威尼斯", "Venice", "Venezia"] },
+    "博洛尼亚": { lat: 44.4949, lng: 11.3426, level: "市", aliases: ["博洛尼亚", "Bologna"] },
+    "巴勒莫": { lat: 38.1157, lng: 13.3615, level: "市", aliases: ["巴勒莫", "Palermo"] }
+  },
+  "西班牙": {
+    "马德里": { lat: 40.4168, lng: -3.7038, level: "市", aliases: ["马德里", "Madrid"] },
+    "巴塞罗那": { lat: 41.3851, lng: 2.1734, level: "市", aliases: ["巴塞罗那", "Barcelona"] },
+    "瓦伦西亚": { lat: 39.4699, lng: -0.3763, level: "市", aliases: ["瓦伦西亚", "Valencia"] },
+    "塞维利亚": { lat: 37.3891, lng: -5.9845, level: "市", aliases: ["塞维利亚", "Seville", "Sevilla"] },
+    "马拉加": { lat: 36.7213, lng: -4.4214, level: "市", aliases: ["马拉加", "Malaga", "Málaga"] },
+    "萨拉戈萨": { lat: 41.6488, lng: -0.8891, level: "市", aliases: ["萨拉戈萨", "Zaragoza"] },
+    "毕尔巴鄂": { lat: 43.2630, lng: -2.9350, level: "市", aliases: ["毕尔巴鄂", "Bilbao"] }
+  },
+  "英国": {
+    "伦敦": { lat: 51.5074, lng: -0.1278, level: "市", aliases: ["伦敦", "London"] },
+    "曼彻斯特": { lat: 53.4808, lng: -2.2426, level: "市", aliases: ["曼彻斯特", "Manchester"] },
+    "伯明翰": { lat: 52.4862, lng: -1.8904, level: "市", aliases: ["伯明翰", "Birmingham"] },
+    "爱丁堡": { lat: 55.9533, lng: -3.1883, level: "市", aliases: ["爱丁堡", "Edinburgh"] },
+    "格拉斯哥": { lat: 55.8642, lng: -4.2518, level: "市", aliases: ["格拉斯哥", "Glasgow"] },
+    "利物浦": { lat: 53.4084, lng: -2.9916, level: "市", aliases: ["利物浦", "Liverpool"] },
+    "利兹": { lat: 53.8008, lng: -1.5491, level: "市", aliases: ["利兹", "Leeds"] },
+    "布里斯托尔": { lat: 51.4545, lng: -2.5879, level: "市", aliases: ["布里斯托尔", "Bristol"] },
+    "纽卡斯尔": { lat: 54.9783, lng: -1.6178, level: "市", aliases: ["纽卡斯尔", "Newcastle", "Newcastle upon Tyne"] },
+    "牛津": { lat: 51.7520, lng: -1.2577, level: "市", aliases: ["牛津", "Oxford"] },
+    "剑桥": { lat: 52.2053, lng: 0.1218, level: "市", aliases: ["剑桥", "Cambridge"] },
+    "卡迪夫": { lat: 51.4816, lng: -3.1791, level: "市", aliases: ["卡迪夫", "Cardiff"] },
+    "贝尔法斯特": { lat: 54.5973, lng: -5.9301, level: "市", aliases: ["贝尔法斯特", "Belfast"] }
+  },
+  "德国": {
+    "柏林": { lat: 52.5200, lng: 13.4050, level: "市", aliases: ["柏林", "Berlin"] },
+    "汉堡": { lat: 53.5511, lng: 9.9937, level: "市", aliases: ["汉堡", "Hamburg"] },
+    "慕尼黑": { lat: 48.1351, lng: 11.5820, level: "市", aliases: ["慕尼黑", "Munich"] },
+    "法兰克福": { lat: 50.1109, lng: 8.6821, level: "市", aliases: ["法兰克福", "Frankfurt"] },
+    "科隆": { lat: 50.9375, lng: 6.9603, level: "市", aliases: ["科隆", "Cologne", "Köln"] },
+    "斯图加特": { lat: 48.7758, lng: 9.1829, level: "市", aliases: ["斯图加特", "Stuttgart"] },
+    "杜塞尔多夫": { lat: 51.2277, lng: 6.7735, level: "市", aliases: ["杜塞尔多夫", "Düsseldorf", "Dusseldorf"] },
+    "多特蒙德": { lat: 51.5136, lng: 7.4653, level: "市", aliases: ["多特蒙德", "Dortmund"] },
+    "埃森": { lat: 51.4556, lng: 7.0116, level: "市", aliases: ["埃森", "Essen"] },
+    "莱比锡": { lat: 51.3397, lng: 12.3731, level: "市", aliases: ["莱比锡", "Leipzig"] },
+    "德累斯顿": { lat: 51.0504, lng: 13.7373, level: "市", aliases: ["德累斯顿", "Dresden"] },
+    "不来梅": { lat: 53.0793, lng: 8.8017, level: "市", aliases: ["不来梅", "Bremen"] },
+    "汉诺威": { lat: 52.3759, lng: 9.7320, level: "市", aliases: ["汉诺威", "Hanover", "Hannover"] },
+    "纽伦堡": { lat: 49.4521, lng: 11.0767, level: "市", aliases: ["纽伦堡", "Nuremberg", "Nürnberg"] }
+  },
+  "荷兰": {
+    "阿姆斯特丹": { lat: 52.3676, lng: 4.9041, level: "市", aliases: ["阿姆斯特丹", "Amsterdam"] },
+    "海牙": { lat: 52.0705, lng: 4.3007, level: "市", aliases: ["海牙", "The Hague"] },
+    "鹿特丹": { lat: 51.9244, lng: 4.4777, level: "市", aliases: ["鹿特丹", "Rotterdam"] },
+    "乌得勒支": { lat: 52.0907, lng: 5.1214, level: "市", aliases: ["乌得勒支", "Utrecht"] },
+    "埃因霍温": { lat: 51.4416, lng: 5.4697, level: "市", aliases: ["埃因霍温", "Eindhoven"] },
+    "格罗宁根": { lat: 53.2194, lng: 6.5665, level: "市", aliases: ["格罗宁根", "Groningen"] }
+  },
+
+  "土耳其": {
+    "伊斯坦布尔": { lat: 41.0082, lng: 28.9784, level: "市", aliases: ["伊斯坦布尔", "Istanbul"] },
+    "安卡拉": { lat: 39.9334, lng: 32.8597, level: "市", aliases: ["安卡拉", "Ankara"] },
+    "伊兹密尔": { lat: 38.4237, lng: 27.1428, level: "市", aliases: ["伊兹密尔", "Izmir", "İzmir"] },
+    "安塔利亚": { lat: 36.8969, lng: 30.7133, level: "市", aliases: ["安塔利亚", "Antalya"] },
+    "布尔萨": { lat: 40.1950, lng: 29.0600, level: "市", aliases: ["布尔萨", "Bursa"] }
+  },
+
+  // === 高加索与中亚 ===
+  "格鲁吉亚": {
+    "第比利斯": { lat: 41.7151, lng: 44.8271, level: "市", aliases: ["第比利斯", "Tbilisi"] }
+  },
+  "亚美尼亚": {
+    "埃里温": { lat: 40.1792, lng: 44.4991, level: "市", aliases: ["埃里温", "Yerevan"] }
+  },
+  "阿塞拜疆": {
+    "巴库": { lat: 40.4093, lng: 49.8671, level: "市", aliases: ["巴库", "Baku"] }
+  },
+  "哈萨克斯坦": {
+    "阿斯塔纳": { lat: 51.1694, lng: 71.4491, level: "市", aliases: ["阿斯塔纳", "Astana", "努尔苏丹", "Nur-Sultan"] },
+    "阿拉木图": { lat: 43.2220, lng: 76.8512, level: "市", aliases: ["阿拉木图", "Almaty"] }
+  },
+  "乌兹别克斯坦": {
+    "塔什干": { lat: 41.2995, lng: 69.2401, level: "市", aliases: ["塔什干", "Tashkent"] }
+  },
+  "吉尔吉斯斯坦": {
+    "比什凯克": { lat: 42.8746, lng: 74.5698, level: "市", aliases: ["比什凯克", "Bishkek"] }
+  },
+  "塔吉克斯坦": {
+    "杜尚别": { lat: 38.5598, lng: 68.7870, level: "市", aliases: ["杜尚别", "Dushanbe"] }
+  },
+  "土库曼斯坦": {
+    "阿什哈巴德": { lat: 37.9601, lng: 58.3261, level: "市", aliases: ["阿什哈巴德", "Ashgabat"] }
+  },
+  "阿富汗": {
+    "喀布尔": { lat: 34.5553, lng: 69.2075, level: "市", aliases: ["喀布尔", "Kabul"] }
+  },
+
+  // === 冰岛与小国 ===
+  "冰岛": {
+    "雷克雅未克": { lat: 64.1466, lng: -21.9426, level: "市", aliases: ["雷克雅未克", "Reykjavik", "Reykjavík"] }
+  },
+  "卢森堡": {
+    "卢森堡市": { lat: 49.6116, lng: 6.1319, level: "市", aliases: ["卢森堡市", "Luxembourg City"] }
+  },
+  "摩纳哥": {
+    "摩纳哥": { lat: 43.7384, lng: 7.4246, level: "市", aliases: ["摩纳哥", "Monaco"] }
+  },
+  "安道尔": {
+    "安道尔城": { lat: 42.5063, lng: 1.5218, level: "市", aliases: ["安道尔城", "Andorra la Vella"] }
+  },
+  "马耳他": {
+    "瓦莱塔": { lat: 35.8989, lng: 14.5146, level: "市", aliases: ["瓦莱塔", "Valletta"] }
+  },
+  "圣马力诺": {
+    "圣马力诺市": { lat: 43.9356, lng: 12.4473, level: "市", aliases: ["圣马力诺市", "San Marino"] }
+  },
+  "塞浦路斯": {
+    "尼科西亚": { lat: 35.1856, lng: 33.3823, level: "市", aliases: ["尼科西亚", "Nicosia"] }
+  },
+
+  // === 中东与北非 ===
+  "阿联酋": {
+    "迪拜": { lat: 25.2048, lng: 55.2708, level: "市", aliases: ["迪拜", "Dubai"] },
+    "阿布扎比": { lat: 24.4539, lng: 54.3773, level: "市", aliases: ["阿布扎比", "Abu Dhabi"] },
+    "沙迦": { lat: 25.3463, lng: 55.4209, level: "市", aliases: ["沙迦", "Sharjah"] }
+  },
+  "沙特阿拉伯": {
+    "利雅得": { lat: 24.7136, lng: 46.6753, level: "市", aliases: ["利雅得", "Riyadh"] },
+    "吉达": { lat: 21.4858, lng: 39.1925, level: "市", aliases: ["吉达", "Jeddah"] },
+    "达曼": { lat: 26.4207, lng: 50.0888, level: "市", aliases: ["达曼", "Dammam"] }
+  },
+  "以色列": {
+    "特拉维夫": { lat: 32.0853, lng: 34.7818, level: "市", aliases: ["特拉维夫", "Tel Aviv"] },
+    "耶路撒冷": { lat: 31.7683, lng: 35.2137, level: "市", aliases: ["耶路撒冷", "Jerusalem"] },
+    "海法": { lat: 32.7940, lng: 34.9896, level: "市", aliases: ["海法", "Haifa"] }
+  },
+  "伊朗": {
+    "德黑兰": { lat: 35.6892, lng: 51.3890, level: "市", aliases: ["德黑兰", "Tehran"] },
+    "马什哈德": { lat: 36.2605, lng: 59.6168, level: "市", aliases: ["马什哈德", "Mashhad"] },
+    "伊斯法罕": { lat: 32.6546, lng: 51.6680, level: "市", aliases: ["伊斯法罕", "Isfahan"] },
+    "设拉子": { lat: 29.5918, lng: 52.5837, level: "市", aliases: ["设拉子", "Shiraz"] }
+  },
+  "伊拉克": {
+    "巴格达": { lat: 33.3152, lng: 44.3661, level: "市", aliases: ["巴格达", "Baghdad"] },
+    "巴士拉": { lat: 30.5085, lng: 47.7804, level: "市", aliases: ["巴士拉", "Basra"] },
+    "埃尔比勒": { lat: 36.1911, lng: 44.0092, level: "市", aliases: ["埃尔比勒", "Erbil"] }
+  },
+  "约旦": {
+    "安曼": { lat: 31.9539, lng: 35.9106, level: "市", aliases: ["安曼", "Amman"] }
+  },
+  "黎巴嫩": {
+    "贝鲁特": { lat: 33.8938, lng: 35.5018, level: "市", aliases: ["贝鲁特", "Beirut"] }
+  },
+  "卡塔尔": {
+    "多哈": { lat: 25.2854, lng: 51.5310, level: "市", aliases: ["多哈", "Doha"] }
+  },
+  "科威特": {
+    "科威特城": { lat: 29.3759, lng: 47.9774, level: "市", aliases: ["科威特城", "Kuwait City"] }
+  },
+  "巴林": {
+    "麦纳麦": { lat: 26.2235, lng: 50.5876, level: "市", aliases: ["麦纳麦", "Manama"] }
+  },
+  "阿曼": {
+    "马斯喀特": { lat: 23.5880, lng: 58.3829, level: "市", aliases: ["马斯喀特", "Muscat"] }
+  },
+  "也门": {
+    "萨那": { lat: 15.3694, lng: 44.1910, level: "市", aliases: ["萨那", "Sanaa", "Sana'a"] },
+    "亚丁": { lat: 12.7855, lng: 45.0187, level: "市", aliases: ["亚丁", "Aden"] }
+  },
+  "埃及": {
+    "开罗": { lat: 30.0444, lng: 31.2357, level: "市", aliases: ["开罗", "Cairo"] },
+    "亚历山大": { lat: 31.2001, lng: 29.9187, level: "市", aliases: ["亚历山大", "Alexandria"] }
+  },
+  "摩洛哥": {
+    "卡萨布兰卡": { lat: 33.5731, lng: -7.5898, level: "市", aliases: ["卡萨布兰卡", "Casablanca"] },
+    "拉巴特": { lat: 34.0209, lng: -6.8416, level: "市", aliases: ["拉巴特", "Rabat"] }
+  },
+  "尼日利亚": {
+    "拉各斯": { lat: 6.5244, lng: 3.3792, level: "市", aliases: ["拉各斯", "Lagos"] },
+    "阿布贾": { lat: 9.0765, lng: 7.3986, level: "市", aliases: ["阿布贾", "Abuja"] }
+  },
+  "肯尼亚": {
+    "内罗毕": { lat: -1.2921, lng: 36.8219, level: "市", aliases: ["内罗毕", "Nairobi"] },
+    "蒙巴萨": { lat: -4.0435, lng: 39.6682, level: "市", aliases: ["蒙巴萨", "Mombasa"] }
+  },
+  "埃塞俄比亚": {
+    "亚的斯亚贝巴": { lat: 8.9806, lng: 38.7578, level: "市", aliases: ["亚的斯亚贝巴", "Addis Ababa"] }
+  },
+  "加纳": {
+    "阿克拉": { lat: 5.6037, lng: -0.1870, level: "市", aliases: ["阿克拉", "Accra"] }
+  },
+  "坦桑尼亚": {
+    "达累斯萨拉姆": { lat: -6.7924, lng: 39.2083, level: "市", aliases: ["达累斯萨拉姆", "Dar es Salaam"] }
+  },
+  "阿尔及利亚": {
+    "阿尔及尔": { lat: 36.7538, lng: 3.0588, level: "市", aliases: ["阿尔及尔", "Algiers"] }
+  },
+  "突尼斯": {
+    "突尼斯": { lat: 36.8065, lng: 10.1815, level: "市", aliases: ["突尼斯", "Tunis"] }
+  },
+  "利比亚": {
+    "的黎波里": { lat: 32.8872, lng: 13.1913, level: "市", aliases: ["的黎波里", "Tripoli"] },
+    "班加西": { lat: 32.1167, lng: 20.0667, level: "市", aliases: ["班加西", "Benghazi"] }
+  },
+  "苏丹": {
+    "喀土穆": { lat: 15.5007, lng: 32.5599, level: "市", aliases: ["喀土穆", "Khartoum"] }
+  },
+  "乌干达": {
+    "坎帕拉": { lat: 0.3476, lng: 32.5825, level: "市", aliases: ["坎帕拉", "Kampala"] }
+  },
+  "卢旺达": {
+    "基加利": { lat: -1.9579, lng: 30.1127, level: "市", aliases: ["基加利", "Kigali"] }
+  },
+  "索马里": {
+    "摩加迪沙": { lat: 2.0469, lng: 45.3182, level: "市", aliases: ["摩加迪沙", "Mogadishu"] }
+  },
+  "科特迪瓦": {
+    "阿比让": { lat: 5.3453, lng: -4.0244, level: "市", aliases: ["阿比让", "Abidjan"] }
+  },
+  "塞内加尔": {
+    "达喀尔": { lat: 14.7167, lng: -17.4677, level: "市", aliases: ["达喀尔", "Dakar"] }
+  },
+  "喀麦隆": {
+    "雅温得": { lat: 3.8480, lng: 11.5021, level: "市", aliases: ["雅温得", "Yaounde", "Yaoundé"] },
+    "杜阿拉": { lat: 4.0511, lng: 9.7679, level: "市", aliases: ["杜阿拉", "Douala"] }
+  },
+  "刚果（金）": {
+    "金沙萨": { lat: -4.4419, lng: 15.2663, level: "市", aliases: ["金沙萨", "Kinshasa"] }
+  },
+  "刚果（布）": {
+    "布拉柴维尔": { lat: -4.2634, lng: 15.2429, level: "市", aliases: ["布拉柴维尔", "Brazzaville"] }
+  },
+  "加蓬": {
+    "利伯维尔": { lat: 0.4162, lng: 9.4673, level: "市", aliases: ["利伯维尔", "Libreville"] }
+  },
+  "安哥拉": {
+    "罗安达": { lat: -8.8390, lng: 13.2894, level: "市", aliases: ["罗安达", "Luanda"] }
+  },
+  "纳米比亚": {
+    "温得和克": { lat: -22.5609, lng: 17.0658, level: "市", aliases: ["温得和克", "Windhoek"] }
+  },
+  "博茨瓦纳": {
+    "哈博罗内": { lat: -24.6282, lng: 25.9231, level: "市", aliases: ["哈博罗内", "Gaborone"] }
+  },
+  "津巴布韦": {
+    "哈拉雷": { lat: -17.8252, lng: 31.0335, level: "市", aliases: ["哈拉雷", "Harare"] }
+  },
+  "赞比亚": {
+    "卢萨卡": { lat: -15.3875, lng: 28.3228, level: "市", aliases: ["卢萨卡", "Lusaka"] }
+  },
+  "莫桑比克": {
+    "马普托": { lat: -25.9692, lng: 32.5732, level: "市", aliases: ["马普托", "Maputo"] }
+  },
+  "马拉维": {
+    "利隆圭": { lat: -13.9626, lng: 33.7741, level: "市", aliases: ["利隆圭", "Lilongwe"] }
+  },
+  "马达加斯加": {
+    "塔那那利佛": { lat: -18.8792, lng: 47.5079, level: "市", aliases: ["塔那那利佛", "Antananarivo"] }
+  },
+  "毛里求斯": {
+    "路易港": { lat: -20.1609, lng: 57.5012, level: "市", aliases: ["路易港", "Port Louis"] }
+  },
+  "塞舌尔": {
+    "维多利亚": { lat: -4.6191, lng: 55.4513, level: "市", aliases: ["维多利亚", "Victoria"] }
+  },
+
+  // === 南亚 ===
+  "印度": {
+    "新德里": { lat: 28.6139, lng: 77.2090, level: "市", aliases: ["新德里", "New Delhi", "Delhi"] },
+    "孟买": { lat: 19.0760, lng: 72.8777, level: "市", aliases: ["孟买", "Mumbai", "Bombay"] },
+    "班加罗尔": { lat: 12.9716, lng: 77.5946, level: "市", aliases: ["班加罗尔", "Bengaluru", "Bangalore"] },
+    "加尔各答": { lat: 22.5726, lng: 88.3639, level: "市", aliases: ["加尔各答", "Kolkata", "Calcutta"] },
+    "金奈": { lat: 13.0827, lng: 80.2707, level: "市", aliases: ["金奈", "Chennai", "Madras"] },
+    "海得拉巴": { lat: 17.3850, lng: 78.4867, level: "市", aliases: ["海得拉巴", "Hyderabad"] },
+    "浦那": { lat: 18.5204, lng: 73.8567, level: "市", aliases: ["浦那", "Pune"] },
+    "艾哈迈达巴德": { lat: 23.0225, lng: 72.5714, level: "市", aliases: ["艾哈迈达巴德", "Ahmedabad"] },
+    "斋浦尔": { lat: 26.9124, lng: 75.7873, level: "市", aliases: ["斋浦尔", "Jaipur"] },
+    "勒克瑙": { lat: 26.8467, lng: 80.9462, level: "市", aliases: ["勒克瑙", "Lucknow"] },
+    "坎普尔": { lat: 26.4499, lng: 80.3319, level: "市", aliases: ["坎普尔", "Kanpur"] },
+    "科钦": { lat: 9.9312, lng: 76.2673, level: "市", aliases: ["科钦", "Kochi", "Cochin"] }
+  },
+  "巴基斯坦": {
+    "卡拉奇": { lat: 24.8607, lng: 67.0011, level: "市", aliases: ["卡拉奇", "Karachi"] },
+    "拉合尔": { lat: 31.5204, lng: 74.3587, level: "市", aliases: ["拉合尔", "Lahore"] },
+    "伊斯兰堡": { lat: 33.6844, lng: 73.0479, level: "市", aliases: ["伊斯兰堡", "Islamabad"] },
+    "白沙瓦": { lat: 34.0151, lng: 71.5249, level: "市", aliases: ["白沙瓦", "Peshawar"] },
+    "拉瓦尔品第": { lat: 33.6007, lng: 73.0679, level: "市", aliases: ["拉瓦尔品第", "Rawalpindi"] }
+  },
+  "孟加拉国": {
+    "达卡": { lat: 23.8103, lng: 90.4125, level: "市", aliases: ["达卡", "Dhaka"] },
+    "吉大港": { lat: 22.3569, lng: 91.7832, level: "市", aliases: ["吉大港", "Chittagong"] }
+  },
+  "斯里兰卡": {
+    "科伦坡": { lat: 6.9271, lng: 79.8612, level: "市", aliases: ["科伦坡", "Colombo"] },
+    "康提": { lat: 7.2906, lng: 80.6337, level: "市", aliases: ["康提", "Kandy"] }
+  },
+  "尼泊尔": {
+    "加德满都": { lat: 27.7172, lng: 85.3240, level: "市", aliases: ["加德满都", "Kathmandu"] },
+    "博卡拉": { lat: 28.2096, lng: 83.9856, level: "市", aliases: ["博卡拉", "Pokhara"] }
+  },
+
+  // === 拉丁美洲 ===
+  "墨西哥": {
+    "墨西哥城": { lat: 19.4326, lng: -99.1332, level: "市", aliases: ["墨西哥城", "Mexico City", "CDMX"] },
+    "瓜达拉哈拉": { lat: 20.6597, lng: -103.3496, level: "市", aliases: ["瓜达拉哈拉", "Guadalajara"] },
+    "蒙特雷": { lat: 25.6866, lng: -100.3161, level: "市", aliases: ["蒙特雷", "Monterrey"] },
+    "普埃布拉": { lat: 19.0413, lng: -98.2062, level: "市", aliases: ["普埃布拉", "Puebla"] },
+    "蒂华纳": { lat: 32.5149, lng: -117.0382, level: "市", aliases: ["蒂华纳", "Tijuana"] },
+    "坎昆": { lat: 21.1619, lng: -86.8515, level: "市", aliases: ["坎昆", "Cancun", "Cancún"] },
+    "梅里达": { lat: 20.9674, lng: -89.5926, level: "市", aliases: ["梅里达", "Merida", "Mérida"] }
+  },
+  "巴西": {
+    "圣保罗": { lat: -23.5505, lng: -46.6333, level: "市", aliases: ["圣保罗", "Sao Paulo", "São Paulo"] },
+    "里约热内卢": { lat: -22.9068, lng: -43.1729, level: "市", aliases: ["里约热内卢", "Rio de Janeiro", "Rio"] },
+    "巴西利亚": { lat: -15.7939, lng: -47.8828, level: "市", aliases: ["巴西利亚", "Brasilia", "Brasília"] },
+    "累西腓": { lat: -8.0476, lng: -34.8770, level: "市", aliases: ["累西腓", "Recife"] },
+    "萨尔瓦多": { lat: -12.9777, lng: -38.5016, level: "市", aliases: ["萨尔瓦多", "Salvador"] },
+    "福塔莱萨": { lat: -3.7319, lng: -38.5267, level: "市", aliases: ["福塔莱萨", "Fortaleza"] },
+    "贝洛奥里藏特": { lat: -19.9167, lng: -43.9345, level: "市", aliases: ["贝洛奥里藏特", "Belo Horizonte"] },
+    "库里提巴": { lat: -25.4284, lng: -49.2733, level: "市", aliases: ["库里提巴", "Curitiba"] },
+    "阿雷格里港": { lat: -30.0346, lng: -51.2177, level: "市", aliases: ["阿雷格里港", "Porto Alegre"] },
+    "马瑙斯": { lat: -3.1190, lng: -60.0217, level: "市", aliases: ["马瑙斯", "Manaus"] }
+  },
+  "阿根廷": {
+    "布宜诺斯艾利斯": { lat: -34.6037, lng: -58.3816, level: "市", aliases: ["布宜诺斯艾利斯", "Buenos Aires"] },
+    "科尔多瓦": { lat: -31.4201, lng: -64.1888, level: "市", aliases: ["科尔多瓦", "Cordoba", "Córdoba"] },
+    "罗萨里奥": { lat: -32.9442, lng: -60.6505, level: "市", aliases: ["罗萨里奥", "Rosario"] }
+  },
+  "智利": {
+    "圣地亚哥": { lat: -33.4489, lng: -70.6693, level: "市", aliases: ["圣地亚哥", "Santiago"] },
+    "瓦尔帕莱索": { lat: -33.0472, lng: -71.6127, level: "市", aliases: ["瓦尔帕莱索", "Valparaiso", "Valparaíso"] }
+  },
+  "秘鲁": {
+    "利马": { lat: -12.0464, lng: -77.0428, level: "市", aliases: ["利马", "Lima"] },
+    "库斯科": { lat: -13.5319, lng: -71.9675, level: "市", aliases: ["库斯科", "Cusco", "Cuzco"] }
+  },
+  "哥伦比亚": {
+    "波哥大": { lat: 4.7110, lng: -74.0721, level: "市", aliases: ["波哥大", "Bogota", "Bogotá"] },
+    "麦德林": { lat: 6.2442, lng: -75.5812, level: "市", aliases: ["麦德林", "Medellin", "Medellín"] },
+    "卡利": { lat: 3.4516, lng: -76.5320, level: "市", aliases: ["卡利", "Cali"] }
+  },
+  "厄瓜多尔": {
+    "基多": { lat: -0.1807, lng: -78.4678, level: "市", aliases: ["基多", "Quito"] },
+    "瓜亚基尔": { lat: -2.1700, lng: -79.9224, level: "市", aliases: ["瓜亚基尔", "Guayaquil"] }
+  },
+  "玻利维亚": {
+    "拉巴斯": { lat: -16.4897, lng: -68.1193, level: "市", aliases: ["拉巴斯", "La Paz"] },
+    "圣克鲁斯": { lat: -17.7833, lng: -63.1821, level: "市", aliases: ["圣克鲁斯", "Santa Cruz de la Sierra"] }
+  },
+  "乌拉圭": {
+    "蒙得维的亚": { lat: -34.9011, lng: -56.1645, level: "市", aliases: ["蒙得维的亚", "Montevideo"] }
+  },
+  "巴拉圭": {
+    "亚松森": { lat: -25.2637, lng: -57.5759, level: "市", aliases: ["亚松森", "Asuncion", "Asunción"] }
+  },
+  "委内瑞拉": {
+    "加拉加斯": { lat: 10.4806, lng: -66.9036, level: "市", aliases: ["加拉加斯", "Caracas"] },
+    "马拉开波": { lat: 10.6545, lng: -71.6533, level: "市", aliases: ["马拉开波", "Maracaibo"] }
+  },
+
+  // === 北美补充 ===
   "美国": {
     "旧金山": { lat: 37.7749, lng: -122.4194, level: "市", aliases: ["旧金山", "San Francisco", "三藩市"] },
     "洛杉矶": { lat: 34.0522, lng: -118.2437, level: "市", aliases: ["洛杉矶", "Los Angeles", "LA"] },
@@ -657,86 +1269,117 @@ const OVERSEAS_CHINESE_REGIONS = {
     "休斯顿": { lat: 29.7604, lng: -95.3698, level: "市", aliases: ["休斯顿", "Houston"] },
     "费城": { lat: 39.9526, lng: -75.1652, level: "市", aliases: ["费城", "Philadelphia"] },
     "拉斯维加斯": { lat: 36.1699, lng: -115.1398, level: "市", aliases: ["拉斯维加斯", "Las Vegas"] },
-    "华盛顿": { lat: 38.9072, lng: -77.0369, level: "市", aliases: ["华盛顿", "Washington DC"] }
+    "华盛顿": { lat: 38.9072, lng: -77.0369, level: "市", aliases: ["华盛顿", "Washington DC"] },
+    "迈阿密": { lat: 25.7617, lng: -80.1918, level: "市", aliases: ["迈阿密", "Miami"] },
+    "亚特兰大": { lat: 33.7490, lng: -84.3880, level: "市", aliases: ["亚特兰大", "Atlanta"] },
+    "达拉斯": { lat: 32.7767, lng: -96.7970, level: "市", aliases: ["达拉斯", "Dallas"] },
+    "奥斯汀": { lat: 30.2672, lng: -97.7431, level: "市", aliases: ["奥斯汀", "Austin"] },
+    "圣安东尼奥": { lat: 29.4241, lng: -98.4936, level: "市", aliases: ["圣安东尼奥", "San Antonio"] },
+    "菲尼克斯": { lat: 33.4484, lng: -112.0740, level: "市", aliases: ["菲尼克斯", "Phoenix"] },
+    "圣迭戈": { lat: 32.7157, lng: -117.1611, level: "市", aliases: ["圣迭戈", "San Diego"] },
+    "圣何塞": { lat: 37.3382, lng: -121.8863, level: "市", aliases: ["圣何塞", "San Jose"] },
+    "丹佛": { lat: 39.7392, lng: -104.9903, level: "市", aliases: ["丹佛", "Denver"] },
+    "底特律": { lat: 42.3314, lng: -83.0458, level: "市", aliases: ["底特律", "Detroit", "Motor City"] },
+    "明尼阿波利斯": { lat: 44.9778, lng: -93.2650, level: "市", aliases: ["明尼阿波利斯", "Minneapolis"] },
+    "圣保罗城": { lat: 44.9537, lng: -93.0900, level: "市", aliases: ["圣保罗城", "Saint Paul", "St. Paul"] },
+    "波特兰": { lat: 45.5152, lng: -122.6784, level: "市", aliases: ["波特兰", "Portland"] },
+    "萨克拉门托": { lat: 38.5816, lng: -121.4944, level: "市", aliases: ["萨克拉门托", "Sacramento"] },
+    "巴尔的摩": { lat: 39.2904, lng: -76.6122, level: "市", aliases: ["巴尔的摩", "Baltimore"] },
+    "夏洛特": { lat: 35.2271, lng: -80.8431, level: "市", aliases: ["夏洛特", "Charlotte"] },
+    "纳什维尔": { lat: 36.1627, lng: -86.7816, level: "市", aliases: ["纳什维尔", "Nashville", "Music City"] },
+    "新奥尔良": { lat: 29.9511, lng: -90.0715, level: "市", aliases: ["新奥尔良", "New Orleans"] },
+    "盐湖城": { lat: 40.7608, lng: -111.8910, level: "市", aliases: ["盐湖城", "Salt Lake City"] },
+    "堪萨斯城": { lat: 39.0997, lng: -94.5786, level: "市", aliases: ["堪萨斯城", "Kansas City"] },
+    "圣路易斯": { lat: 38.6270, lng: -90.1994, level: "市", aliases: ["圣路易斯", "St. Louis"] },
+    "印第安纳波利斯": { lat: 39.7684, lng: -86.1581, level: "市", aliases: ["印第安纳波利斯", "Indianapolis"] },
+    "哥伦布": { lat: 39.9612, lng: -82.9988, level: "市", aliases: ["哥伦布", "Columbus"] },
+    "克利夫兰": { lat: 41.4993, lng: -81.6944, level: "市", aliases: ["克利夫兰", "Cleveland"] },
+    "匹兹堡": { lat: 40.4406, lng: -79.9959, level: "市", aliases: ["匹兹堡", "Pittsburgh"] },
+    "奥兰多": { lat: 28.5383, lng: -81.3792, level: "市", aliases: ["奥兰多", "Orlando"] },
+    "坦帕": { lat: 27.9506, lng: -82.4572, level: "市", aliases: ["坦帕", "Tampa"] },
+    "檀香山": { lat: 21.3069, lng: -157.8583, level: "市", aliases: ["檀香山", "Honolulu"] },
+    "安克雷奇": { lat: 61.2181, lng: -149.9003, level: "市", aliases: ["安克雷奇", "Anchorage"] }
   },
-
   "加拿大": {
     "温哥华": { lat: 49.2827, lng: -123.1207, level: "市", aliases: ["温哥华", "Vancouver"] },
     "多伦多": { lat: 43.6532, lng: -79.3832, level: "市", aliases: ["多伦多", "Toronto"] },
-    "蒙特利尔": { lat: 45.5017, lng: -73.5673, level: "市", aliases: ["蒙特利尔", "Montreal"] },
+    "蒙特利尔": { lat: 45.5019, lng: -73.5674, level: "市", aliases: ["蒙特利尔", "Montreal", "Montréal"] },
     "卡尔加里": { lat: 51.0447, lng: -114.0719, level: "市", aliases: ["卡尔加里", "Calgary"] },
     "渥太华": { lat: 45.4215, lng: -75.6972, level: "市", aliases: ["渥太华", "Ottawa"] },
-    "埃德蒙顿": { lat: 53.5461, lng: -113.4938, level: "市", aliases: ["埃德蒙顿", "Edmonton"] }
+    "埃德蒙顿": { lat: 53.5461, lng: -113.4938, level: "市", aliases: ["埃德蒙顿", "Edmonton"] },
+    "温尼伯": { lat: 49.8951, lng: -97.1384, level: "市", aliases: ["温尼伯", "Winnipeg"] },
+    "魁北克城": { lat: 46.8139, lng: -71.2080, level: "市", aliases: ["魁北克城", "Quebec City", "Québec"] },
+    "维多利亚": { lat: 48.4284, lng: -123.3656, level: "市", aliases: ["维多利亚", "Victoria"] },
+    "哈利法克斯": { lat: 44.6488, lng: -63.5752, level: "市", aliases: ["哈利法克斯", "Halifax"] }
   },
+  // === 中美洲与加勒比 ===
+  "危地马拉": { "危地马拉城": { lat: 14.6349, lng: -90.5069, level: "市", aliases: ["危地马拉城", "Guatemala City"] } },
+  "萨尔瓦多": { "圣萨尔瓦多": { lat: 13.6929, lng: -89.2182, level: "市", aliases: ["圣萨尔瓦多", "San Salvador"] } },
+  "洪都拉斯": { "特古西加尔巴": { lat: 14.0723, lng: -87.1921, level: "市", aliases: ["特古西加尔巴", "Tegucigalpa"] } },
+  "尼加拉瓜": { "马那瓜": { lat: 12.1140, lng: -86.2362, level: "市", aliases: ["马那瓜", "Managua"] } },
+  "哥斯达黎加": { "圣何塞": { lat: 9.9281, lng: -84.0907, level: "市", aliases: ["圣何塞", "San Jose"] } },
+  "巴拿马": { "巴拿马城": { lat: 8.9824, lng: -79.5199, level: "市", aliases: ["巴拿马城", "Panama City"] } },
+  "古巴": { "哈瓦那": { lat: 23.1136, lng: -82.3666, level: "市", aliases: ["哈瓦那", "Havana"] } },
+  "多米尼加": { "圣多明各": { lat: 18.4861, lng: -69.9312, level: "市", aliases: ["圣多明各", "Santo Domingo"] } },
+  "波多黎各": { "圣胡安": { lat: 18.4655, lng: -66.1057, level: "市", aliases: ["圣胡安", "San Juan"] } },
+  "巴哈马": { "拿骚": { lat: 25.0343, lng: -77.3963, level: "市", aliases: ["拿骚", "Nassau"] } },
+  "牙买加": { "金斯敦": { lat: 17.9712, lng: -76.7936, level: "市", aliases: ["金斯敦", "Kingston"] } }
+};
 
-  // === 欧洲华人聚居地 ===
-  "英国": {
-    "伦敦": { lat: 51.5074, lng: -0.1278, level: "市", aliases: ["伦敦", "London"] },
-    "曼彻斯特": { lat: 53.4808, lng: -2.2426, level: "市", aliases: ["曼彻斯特", "Manchester"] },
-    "伯明翰": { lat: 52.4862, lng: -1.8904, level: "市", aliases: ["伯明翰", "Birmingham"] }
-  },
-
-  "法国": {
-    "巴黎": { lat: 48.8566, lng: 2.3522, level: "市", aliases: ["巴黎", "Paris"] },
-    "马赛": { lat: 43.2965, lng: 5.3698, level: "市", aliases: ["马赛", "Marseille"] },
-    "里昂": { lat: 45.7640, lng: 4.8357, level: "市", aliases: ["里昂", "Lyon"] }
-  },
-
-  "德国": {
-    "柏林": { lat: 52.5200, lng: 13.4050, level: "市", aliases: ["柏林", "Berlin"] },
-    "汉堡": { lat: 53.5511, lng: 9.9937, level: "市", aliases: ["汉堡", "Hamburg"] },
-    "慕尼黑": { lat: 48.1351, lng: 11.5820, level: "市", aliases: ["慕尼黑", "Munich"] },
-    "法兰克福": { lat: 50.1109, lng: 8.6821, level: "市", aliases: ["法兰克福", "Frankfurt"] }
-  },
-
-  "荷兰": {
-    "阿姆斯特丹": { lat: 52.3676, lng: 4.9041, level: "市", aliases: ["阿姆斯特丹", "Amsterdam"] },
-    "海牙": { lat: 52.0705, lng: 4.3007, level: "市", aliases: ["海牙", "The Hague"] },
-    "鹿特丹": { lat: 51.9244, lng: 4.4777, level: "市", aliases: ["鹿特丹", "Rotterdam"] }
-  },
-
-  "意大利": {
-    "罗马": { lat: 41.9028, lng: 12.4964, level: "市", aliases: ["罗马", "Rome"] },
-    "米兰": { lat: 45.4642, lng: 9.1900, level: "市", aliases: ["米兰", "Milan"] }
-  },
-
-  "西班牙": {
-    "马德里": { lat: 40.4168, lng: -3.7038, level: "市", aliases: ["马德里", "Madrid"] },
-    "巴塞罗那": { lat: 41.3851, lng: 2.1734, level: "市", aliases: ["巴塞罗那", "Barcelona"] }
-  },
-
-  // === 大洋洲华人聚居地 ===
-  "澳大利亚": {
-    "悉尼": { lat: -33.8688, lng: 151.2093, level: "市", aliases: ["悉尼", "Sydney"] },
-    "墨尔本": { lat: -37.8136, lng: 144.9631, level: "市", aliases: ["墨尔本", "Melbourne"] },
-    "布里斯班": { lat: -27.4698, lng: 153.0251, level: "市", aliases: ["布里斯班", "Brisbane"] },
-    "珀斯": { lat: -31.9505, lng: 115.8605, level: "市", aliases: ["珀斯", "Perth"] },
-    "阿德莱德": { lat: -34.9285, lng: 138.6007, level: "市", aliases: ["阿德莱德", "Adelaide"] },
-    "堪培拉": { lat: -35.2809, lng: 149.1300, level: "市", aliases: ["堪培拉", "Canberra"] }
-  },
-
-  "新西兰": {
-    "奥克兰": { lat: -36.8485, lng: 174.7633, level: "市", aliases: ["奥克兰", "Auckland"] },
-    "惠灵顿": { lat: -41.2865, lng: 174.7762, level: "市", aliases: ["惠灵顿", "Wellington"] },
-    "基督城": { lat: -43.5321, lng: 172.6362, level: "市", aliases: ["基督城", "Christchurch"] }
-  },
-
-  // === 其他地区华人聚居地 ===
-  "日本": {
-    "东京": { lat: 35.6762, lng: 139.6503, level: "市", aliases: ["东京", "Tokyo"] },
-    "大阪": { lat: 34.6937, lng: 135.5023, level: "市", aliases: ["大阪", "Osaka"] },
-    "横滨": { lat: 35.4437, lng: 139.6380, level: "市", aliases: ["横滨", "Yokohama"] }
-  },
-
-  "韩国": {
-    "首尔": { lat: 37.5665, lng: 126.9780, level: "市", aliases: ["首尔", "Seoul", "汉城"] },
-    "釜山": { lat: 35.1796, lng: 129.0756, level: "市", aliases: ["釜山", "Busan"] }
-  },
-
-  "南非": {
-    "约翰内斯堡": { lat: -26.2041, lng: 28.0473, level: "市", aliases: ["约翰内斯堡", "Johannesburg"] },
-    "开普敦": { lat: -33.9249, lng: 18.4241, level: "市", aliases: ["开普敦", "Cape Town"] }
-  }
+// 常见国家英文别名到中文键的映射（用于国际地址 disambiguation）
+const COUNTRY_ALIASES = {
+  // 北美
+  'united states': '美国', 'usa': '美国', 'us': '美国', 'america': '美国',
+  'canada': '加拿大',
+  // 拉美
+  'mexico': '墨西哥', 'brazil': '巴西', 'argentina': '阿根廷', 'chile': '智利',
+  'peru': '秘鲁', 'colombia': '哥伦比亚', 'ecuador': '厄瓜多尔', 'bolivia': '玻利维亚',
+  'uruguay': '乌拉圭', 'paraguay': '巴拉圭', 'venezuela': '委内瑞拉',
+  'costa rica': '哥斯达黎加', 'panama': '巴拿马', 'guatemala': '危地马拉',
+  'honduras': '洪都拉斯', 'nicaragua': '尼加拉瓜', 'el salvador': '萨尔瓦多',
+  'cuba': '古巴', 'dominican republic': '多米尼加', 'puerto rico': '波多黎各',
+  'bahamas': '巴哈马', 'jamaica': '牙买加',
+  // 欧洲
+  'united kingdom': '英国', 'uk': '英国', 'great britain': '英国', 'britain': '英国',
+  'england': '英国', 'scotland': '英国', 'wales': '英国', 'northern ireland': '英国',
+  'france': '法国', 'germany': '德国', 'netherlands': '荷兰', 'holland': '荷兰',
+  'italy': '意大利', 'spain': '西班牙', 'portugal': '葡萄牙', 'belgium': '比利时',
+  'switzerland': '瑞士', 'austria': '奥地利', 'sweden': '瑞典', 'norway': '挪威',
+  'finland': '芬兰', 'denmark': '丹麦', 'poland': '波兰', 'czech': '捷克',
+  'czechia': '捷克', 'hungary': '匈牙利', 'greece': '希腊', 'ireland': '爱尔兰',
+  'iceland': '冰岛', 'russia': '俄罗斯', 'ukraine': '乌克兰', 'romania': '罗马尼亚',
+  'bulgaria': '保加利亚', 'serbia': '塞尔维亚', 'croatia': '克罗地亚',
+  'slovenia': '斯洛文尼亚', 'slovakia': '斯洛伐克', 'bosnia': '波斯尼亚和黑塞哥维那',
+  'montenegro': '黑山', 'albania': '阿尔巴尼亚', 'kosovo': '科索沃',
+  'lithuania': '立陶宛', 'latvia': '拉脱维亚', 'estonia': '爱沙尼亚',
+  'luxembourg': '卢森堡', 'monaco': '摩纳哥', 'andorra': '安道尔', 'malta': '马耳他',
+  'san marino': '圣马力诺', 'cyprus': '塞浦路斯',
+  // 中东与高加索
+  'turkey': '土耳其', 'türkiye': '土耳其', 'israel': '以色列', 'qatar': '卡塔尔',
+  'kuwait': '科威特', 'bahrain': '巴林', 'oman': '阿曼', 'yemen': '也门',
+  'iran': '伊朗', 'iraq': '伊拉克', 'jordan': '约旦', 'lebanon': '黎巴嫩',
+  'uae': '阿联酋', 'united arab emirates': '阿联酋',
+  'georgia': '格鲁吉亚', 'armenia': '亚美尼亚', 'azerbaijan': '阿塞拜疆',
+  // 非洲
+  'south africa': '南非', 'morocco': '摩洛哥', 'egypt': '埃及', 'nigeria': '尼日利亚',
+  'kenya': '肯尼亚', 'ethiopia': '埃塞俄比亚', 'ghana': '加纳', 'tanzania': '坦桑尼亚',
+  'algeria': '阿尔及利亚', 'tunisia': '突尼斯', 'libya': '利比亚', 'sudan': '苏丹',
+  'uganda': '乌干达', 'rwanda': '卢旺达', 'somalia': '索马里', 'ivory coast': '科特迪瓦',
+  'senegal': '塞内加尔', 'cameroon': '喀麦隆', 'dr congo': '刚果（金）',
+  'drc': '刚果（金）', 'congo': '刚果（布）', 'gabon': '加蓬', 'angola': '安哥拉',
+  'namibia': '纳米比亚', 'botswana': '博茨瓦纳', 'zimbabwe': '津巴布韦',
+  'zambia': '赞比亚', 'mozambique': '莫桑比克', 'malawi': '马拉维',
+  'madagascar': '马达加斯加', 'mauritius': '毛里求斯', 'seychelles': '塞舌尔',
+  // 亚太
+  'japan': '日本', 'south korea': '韩国', 'korea': '韩国', 'north korea': '朝鲜',
+  'mongolia': '蒙古国', 'singapore': '新加坡', 'malaysia': '马来西亚',
+  'thailand': '泰国', 'indonesia': '印度尼西亚', 'philippines': '菲律宾',
+  'vietnam': '越南', 'cambodia': '柬埔寨', 'laos': '老挝', 'brunei': '文莱',
+  'east timor': '东帝汶', 'timor-leste': '东帝汶', 'maldives': '马尔代夫',
+  'india': '印度', 'pakistan': '巴基斯坦', 'bangladesh': '孟加拉国',
+  'sri lanka': '斯里兰卡', 'nepal': '尼泊尔', 'bhutan': '不丹',
+  // 大洋洲
+  'australia': '澳大利亚', 'new zealand': '新西兰',
 };
 
 /**
@@ -808,11 +1451,9 @@ const HISTORICAL_NAMES = {
   "穗": "广州市",
   "深": "深圳市",
   "杭": "杭州市",
-  "宁": "南京市",
   "锡": "无锡市",
   "常": "常州市",
   "济": "济南市",
-  "青": "青岛市",
   "蓉": "成都市",
   "筑": "贵阳市",
   "昆": "昆明市",
@@ -869,6 +1510,9 @@ const HISTORICAL_NAMES = {
   "狮城": "新加坡",
   "星洲": "新加坡",
   "花园城市": "新加坡",
+  
+  // === 常见外地中文音译 → 英文名 + 国家（用于 all-the-cities 兜底）===
+  "科采列沃": "Koceljeva, Serbia",
   "三藩市": "旧金山",
   "金山": "旧金山",
   "天使之城": "洛杉矶",
@@ -878,10 +1522,10 @@ const HISTORICAL_NAMES = {
   "汽车城": "底特律",
   "音乐之城": "纳什维尔",
   "太空城": "休斯顿",
-  "赌城": "拉斯维加斯",
+  // "赌城": "拉斯维加斯", // 与澳门别名冲突，避免歧义
   "罪恶之城": "拉斯维加斯",
   "枫叶之国": "加拿大",
-  "雾都": "伦敦",
+  // "雾都": "伦敦", // 与重庆市别名冲突，避免歧义
   "光明之城": "巴黎",
   "浪漫之都": "巴黎",
   "永恒之城": "罗马",
@@ -904,10 +1548,27 @@ const HISTORICAL_NAMES = {
  */
 export class GeoLookupService {
   constructor() {
-    this.regions = CHINA_REGIONS;
-    this.overseasRegions = OVERSEAS_CHINESE_REGIONS;
     this.allRegions = { ...CHINA_REGIONS, ...OVERSEAS_CHINESE_REGIONS };
     this.historicalNames = HISTORICAL_NAMES;
+    this.countryAliases = COUNTRY_ALIASES;
+
+    // 可选：尝试加载 all-the-cities 作为补充（未安装时忽略）
+    this._require = createRequire(import.meta.url);
+    // 作为必备补充数据源加载（未安装则抛错，阻止启动）
+    // all-the-cities 为 CJS 包，使用 require 同步加载
+    try {
+      this.allCities = this._require('all-the-cities');
+    } catch (e) {
+      throw new Error('缺少依赖 all-the-cities，请运行 npm i all-the-cities 安装后重试');
+    }
+
+    // 启动日志：打印全局城市数据加载情况
+    try {
+      const count = Array.isArray(this.allCities) ? this.allCities.length : 0;
+      console.info(`[GeoLookup] all-the-cities 已加载：${count} 个城市（全球补充数据源）`);
+    } catch (_) {
+      /* noop */
+    }
   }
 
   /**
@@ -928,10 +1589,23 @@ export class GeoLookupService {
       const modernAddress = this.convertHistoricalNames(normalizedAddress);
 
       // 尝试不同的匹配策略
-      let result = this.exactMatch(modernAddress) ||
-                   this.hierarchyMatch(modernAddress) ||
-                   this.aliasMatch(modernAddress) ||
-                   this.fuzzyMatch(modernAddress);
+      const looksInternational = /[,，]/.test(modernAddress) || /[A-Za-z].*\s+[A-Za-z]/.test(modernAddress);
+      let result = null;
+      if (looksInternational) {
+        result = this.exactMatch(modernAddress) ||
+                 this.hierarchyMatch(modernAddress) ||
+                 this.internationalMatch(modernAddress) ||
+                 this.aliasMatch(modernAddress) ||
+                 this.allCitiesMatch(modernAddress) ||
+                 this.fuzzyMatch(modernAddress);
+      } else {
+        result = this.exactMatch(modernAddress) ||
+                 this.hierarchyMatch(modernAddress) ||
+                 this.aliasMatch(modernAddress) ||
+                 this.internationalMatch(modernAddress) ||
+                 this.allCitiesMatch(modernAddress) ||
+                 this.fuzzyMatch(modernAddress);
+      }
 
       if (result) {
         return {
@@ -968,11 +1642,28 @@ export class GeoLookupService {
   normalizeAddress(address) {
     return address
       .trim()
-      .replace(/\s+/g, '')  // 删除空格
+      // 保留国际地址中的分隔符，匹配时统一用自定义归一化
+      .replace(/[\u3000]+/g, ' ')
       .replace(/市$/, '市')  // 确保市字正确
       .replace(/省$/, '省')  // 确保省字正确
       .replace(/区$/, '区')  // 确保区字正确
       .replace(/县$/, '县'); // 确保县字正确
+  }
+
+  /**
+   * 文本归一化（用于匹配，大小写/空白/标点/重音符统一处理）
+   * @param {string} text
+   * @returns {string}
+   */
+  sanitizeForMatch(text) {
+    if (!text) return '';
+    return text
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '') // 去除重音符号
+      .replace(/[\s,_./\\\-]+/g, '')  // 移除常见分隔符
+      .replace(/[()]/g, '')
+      .trim();
   }
 
   /**
@@ -1000,11 +1691,12 @@ export class GeoLookupService {
    * @returns {Object|null} 匹配结果
    */
   exactMatch(address) {
+    const addressKey = this.sanitizeForMatch(address);
     for (const [province, cities] of Object.entries(this.allRegions)) {
       for (const [city, data] of Object.entries(cities)) {
         const fullName = province === city ? city : `${province}${city}`;
-        // 检查完整地名、城市名、以及别名
-        if (address === fullName || address === city) {
+        // 检查完整地名、城市名（归一化比较）
+        if (addressKey === this.sanitizeForMatch(fullName) || addressKey === this.sanitizeForMatch(city)) {
           return {
             ...data,
             standardName: fullName,
@@ -1018,7 +1710,7 @@ export class GeoLookupService {
         // 检查别名
         if (data.aliases) {
           for (const alias of data.aliases) {
-            if (address === alias) {
+            if (addressKey === this.sanitizeForMatch(alias)) {
               return {
                 ...data,
                 standardName: fullName,
@@ -1082,16 +1774,265 @@ export class GeoLookupService {
   }
 
   /**
+   * 国际地址格式匹配，如 "Paris, France" 或 "France Paris"
+   * 尝试先匹配城市别名，再在相同国家下偏好返回；若无法判定国家则返回第一个城市匹配
+   * @param {string} address
+   * @returns {Object|null}
+   */
+  internationalMatch(address) {
+    const addrKey = this.sanitizeForMatch(address);
+    // 候选分隔
+    const parts = address.split(/[,，]/).map(s => s.trim()).filter(Boolean);
+    // 尝试识别国家
+    let matchedCountry = null;
+    const addrLower = address.toLowerCase();
+    for (const [alias, cn] of Object.entries(COUNTRY_ALIASES)) {
+      if (addrLower.includes(alias)) {
+        matchedCountry = cn;
+        break;
+      }
+    }
+    // 优先按别名/城市名匹配
+    let cityHit = this.aliasMatch(address) || this.exactMatch(address);
+    if (cityHit && parts.length <= 1) {
+      if (matchedCountry && cityHit.province !== matchedCountry && this.allRegions[matchedCountry]) {
+        const pkFull = this.sanitizeForMatch(address);
+        for (const [city, data] of Object.entries(this.allRegions[matchedCountry])) {
+          const aliases = [city, ...(data.aliases || [])];
+          for (const al of aliases) {
+            const ak = this.sanitizeForMatch(al);
+            if (!ak) continue;
+            const hit = ak.length <= 2 ? (pkFull === ak) : pkFull.includes(ak);
+            if (hit) {
+              return {
+                ...data,
+                standardName: matchedCountry === city ? city : `${matchedCountry}${city}`,
+                province: matchedCountry,
+                city,
+                district: data.level === '区' ? city : null,
+                confidence: 0.95
+              };
+            }
+          }
+        }
+      }
+      return cityHit;
+    }
+    // 若已命中城市但与识别的国家不一致，优先在该国家范围内再尝试一次
+    if (cityHit && matchedCountry && cityHit.province !== matchedCountry) {
+      const pkFull = parts.length > 1 ? this.sanitizeForMatch(parts[0]) : this.sanitizeForMatch(address);
+      if (this.allRegions[matchedCountry]) {
+        for (const [city, data] of Object.entries(this.allRegions[matchedCountry])) {
+          const aliases = [city, ...(data.aliases || [])];
+          for (const al of aliases) {
+            const ak = this.sanitizeForMatch(al);
+            if (!ak) continue;
+            const hit = ak.length <= 2 ? (pkFull === ak) : pkFull.includes(ak);
+            if (hit) {
+              return {
+                ...data,
+                standardName: matchedCountry === city ? city : `${matchedCountry}${city}`,
+                province: matchedCountry,
+                city,
+                district: data.level === '区' ? city : null,
+                confidence: 0.95
+              };
+            }
+          }
+        }
+      }
+      // 未能在指定国家找到更精确的，则继续后续逻辑
+    }
+
+    if (!cityHit && parts.length > 1) {
+      // 尝试分别匹配每一段，哪段像城市就返回
+      for (const p of parts) {
+        // 若识别到国家，优先在该国范围内匹配城市
+        if (matchedCountry && this.allRegions[matchedCountry]) {
+          const pk = this.sanitizeForMatch(p);
+          for (const [city, data] of Object.entries(this.allRegions[matchedCountry])) {
+            const aliases = [city, ...(data.aliases || [])];
+            for (const al of aliases) {
+              const ak = this.sanitizeForMatch(al);
+              if (!ak) continue;
+              const hit = ak.length <= 2 ? (pk === ak) : pk.includes(ak);
+              if (hit) {
+                return {
+                  ...data,
+                  standardName: matchedCountry === city ? city : `${matchedCountry}${city}`,
+                  province: matchedCountry,
+                  city,
+                  district: data.level === '区' ? city : null,
+                  confidence: 0.9
+                };
+              }
+            }
+          }
+        }
+        const hit = this.aliasMatch(p) || this.exactMatch(p);
+        if (hit) return hit;
+      }
+    }
+
+    // 最后尝试以空格分割的模式，如 "New York USA"
+    const spaceParts = address.split(/[\s]+/).map(s => s.trim()).filter(Boolean);
+    if (!cityHit && spaceParts.length > 1) {
+      for (const p of spaceParts) {
+        if (matchedCountry && this.allRegions[matchedCountry]) {
+          const pk = this.sanitizeForMatch(p);
+          for (const [city, data] of Object.entries(this.allRegions[matchedCountry])) {
+            const aliases = [city, ...(data.aliases || [])];
+            for (const al of aliases) {
+              const ak = this.sanitizeForMatch(al);
+              if (!ak) continue;
+              const hit = ak.length <= 2 ? (pk === ak) : pk.includes(ak);
+              if (hit) {
+                return {
+                  ...data,
+                  standardName: matchedCountry === city ? city : `${matchedCountry}${city}`,
+                  province: matchedCountry,
+                  city,
+                  district: data.level === '区' ? city : null,
+                  confidence: 0.9
+                };
+              }
+            }
+          }
+        }
+        const hit = this.aliasMatch(p) || this.exactMatch(p);
+        if (hit) return hit;
+      }
+    }
+    // 兜底：按整体别名匹配（宽松包含），但避免超短别名误命中
+    for (const [province, cities] of Object.entries(this.allRegions)) {
+      for (const [city, data] of Object.entries(cities)) {
+        const aliases = [city, ...(data.aliases || [])];
+        for (const al of aliases) {
+          const ak = this.sanitizeForMatch(al);
+          if (!ak) continue;
+          const hit = ak.length <= 2 ? (addrKey === ak) : addrKey.includes(ak);
+          if (hit) {
+            return {
+              ...data,
+              standardName: province === city ? city : `${province}${city}`,
+              province,
+              city,
+              district: data.level === '区' ? city : null,
+              confidence: 0.7
+            };
+          }
+        }
+      }
+    }
+    return null;
+  }
+
+  /**
+   * 使用 all-the-cities 作为补充数据源
+   * @param {string} address
+   * @returns {Object|null}
+   */
+  allCitiesMatch(address) {
+    try {
+      if (!this.allCities || !Array.isArray(this.allCities)) return null;
+      const addrLower = address.toLowerCase();
+      const addrKey = this.sanitizeForMatch(address);
+
+      // 识别国家（英文别名），保留英文 alias 以便与数据国家名匹配
+      let matchedCountryCn = null;
+      let matchedCountryAliasEn = null;
+      for (const [aliasEn, cn] of Object.entries(this.countryAliases || {})) {
+        if (addrLower.includes(aliasEn)) {
+          matchedCountryCn = cn;
+          matchedCountryAliasEn = aliasEn;
+          break;
+        }
+      }
+
+      // 基于分隔抽取城市 token
+      const parts = address.split(/[,，]/).map(s => s.trim()).filter(Boolean);
+      let cityToken = parts.length > 0 ? parts[0] : address;
+      // 如果第一个 token 看起来是国家名，则使用第二个 token
+      if (parts.length > 1 && matchedCountryAliasEn && parts[0].toLowerCase().includes(matchedCountryAliasEn)) {
+        cityToken = parts[1];
+      }
+      const cityKey = this.sanitizeForMatch(cityToken);
+
+      let best = null;
+      let bestScore = 0;
+
+      for (const rec of this.allCities) {
+        const names = [rec.name, rec.name_ascii, rec.adminName].filter(Boolean);
+        // 名称匹配评分
+        let localScore = 0;
+        for (const n of names) {
+          const nk = this.sanitizeForMatch(String(n));
+          const s = this.calculateSimilarity(cityKey, nk);
+          if (s > localScore) localScore = s;
+        }
+        if (localScore < 0.7) continue; // 名称不够相似，跳过
+
+        // 国家匹配提升权重
+        let countryBoost = 0;
+        if (matchedCountryAliasEn) {
+          const recCountryKey = this.sanitizeForMatch(String(rec.country));
+          const aliasKey = this.sanitizeForMatch(matchedCountryAliasEn);
+          if (recCountryKey === aliasKey) {
+            countryBoost = 0.15; // 增强置信
+          } else if (rec.iso2 && this.sanitizeForMatch(rec.iso2) === aliasKey) {
+            countryBoost = 0.15;
+          } else if (rec.iso3 && this.sanitizeForMatch(rec.iso3) === aliasKey) {
+            countryBoost = 0.15;
+          }
+        }
+
+        const score = Math.min(1, localScore + countryBoost);
+        if (score > bestScore) {
+          bestScore = score;
+          best = rec;
+        }
+      }
+
+      if (!best) return null;
+
+      // 结果整形：国家中文优先，否则使用英文
+      let province = matchedCountryCn || best.country;
+      // standardName：国家+城市（尽量中文）
+      const standardName = `${province}${best.name}`;
+      return {
+        lat: Number(best.lat),
+        lng: Number(best.lon),
+        level: '市',
+        aliases: [best.name, best.name_ascii].filter(Boolean),
+        standardName,
+        province,
+        city: best.name,
+        district: null,
+        confidence: bestScore
+      };
+    } catch (e) {
+      return null;
+    }
+  }
+
+  /**
    * 别名匹配
    * @param {string} address - 地址
    * @returns {Object|null} 匹配结果
    */
   aliasMatch(address) {
+    const addressKey = this.sanitizeForMatch(address);
     for (const [province, cities] of Object.entries(this.allRegions)) {
       for (const [city, data] of Object.entries(cities)) {
         if (data.aliases) {
           for (const alias of data.aliases) {
-            if (address.includes(alias)) {
+            const aliasKey = this.sanitizeForMatch(alias);
+            if (!aliasKey) continue;
+            // 避免超短别名（如“LA”）误命中，例如 "Switzerland" 包含 "la"
+            const hit = aliasKey.length <= 2
+              ? (addressKey === aliasKey)
+              : addressKey.includes(aliasKey);
+            if (hit) {
               return {
                 ...data,
                 standardName: `${province}${city}`,
@@ -1117,10 +2058,11 @@ export class GeoLookupService {
     let bestMatch = null;
     let bestScore = 0;
 
+    const addrKey = this.sanitizeForMatch(address);
     for (const [province, cities] of Object.entries(this.allRegions)) {
       for (const [city, data] of Object.entries(cities)) {
         const fullName = province === city ? city : `${province}${city}`;
-        const score = this.calculateSimilarity(address, fullName);
+        const score = this.calculateSimilarity(addrKey, this.sanitizeForMatch(fullName));
         
         if (score > bestScore && score > 0.6) {
           bestScore = score;
@@ -1135,7 +2077,7 @@ export class GeoLookupService {
         }
 
         // 也检查城市名本身
-        const cityScore = this.calculateSimilarity(address, city);
+        const cityScore = this.calculateSimilarity(addrKey, this.sanitizeForMatch(city));
         if (cityScore > bestScore && cityScore > 0.6) {
           bestScore = cityScore;
           bestMatch = {
@@ -1168,6 +2110,8 @@ export class GeoLookupService {
     const distance = this.levenshteinDistance(longer, shorter);
     return (longer.length - distance) / longer.length;
   }
+
+  // 坐标直输功能已移除（根据产品需求不提供）
 
   /**
    * 计算编辑距离 (Levenshtein Distance)
@@ -1227,3 +2171,4 @@ export class GeoLookupService {
 
 // 导出单例实例
 export const geoLookupService = new GeoLookupService();
+import { createRequire } from 'module';
