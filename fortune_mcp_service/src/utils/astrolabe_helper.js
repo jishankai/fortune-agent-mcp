@@ -205,6 +205,11 @@ export function formatPalace(palace, horoscope = {}, scope = 'origin') {
       return acc;
     }, []) || [];
 
+    // 只有当本命宫索引等于大限宫索引时，才显示大限年龄范围
+    if (palace.index === horoscope.index) {
+      ret["大限年龄范围"] = palace.decadal?.range || [];
+    }
+
   }
   if (scope == 'yearly') {
     ret["流曜"] = horoscope.stars[palace.index]?.map(star => ({
