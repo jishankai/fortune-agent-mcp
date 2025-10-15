@@ -1,13 +1,19 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
 import { getPalace } from './tools/astrolabe.js';
-import { 
-  getHoroscope, 
-  getYearlyHoroscope, 
-  getMonthlyHoroscope, 
+import {
+  getHoroscope,
+  getYearlyHoroscope,
+  getMonthlyHoroscope,
   getDailyHoroscope,
 } from './tools/horoscope.js';
-import { analyzeSynastryByInfo } from './tools/synastry.js';
+import {
+  analyzeSynastryByInfo,
+  analyzeDecadalSynastryByInfo,
+  analyzeYearlySynastryByInfo,
+  analyzeMonthlySynastryByInfo,
+  analyzeDailySynastryByInfo,
+} from './tools/synastry.js';
 
 export function createMcpServer() {
   const server = new McpServer({
@@ -233,6 +239,149 @@ export function createMcpServer() {
       console.log(`合盘分析：${args.name_a} × ${args.name_b}`);
       const result = await analyzeSynastryByInfo(args);
       console.log('合盘分析完成！');
+      return {
+        content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
+      };
+    }
+  );
+
+  // 注册大限合盘分析工具（通过输入信息）
+  server.registerTool(
+    'analyze_decadal_synastry_by_info',
+    {
+      title: '合盘分析（大限）',
+      description: '基于双方出生信息进行紫微斗数大限合盘分析，评估长期关系走向',
+      inputSchema: {
+        birth_date_a: z.string().describe('A方出生日期，格式：YYYY-MM-DD'),
+        birth_time_a: z.string().describe('A方出生时间，格式：HH:mm'),
+        gender_a: z.enum(['男', '女']).describe('A方性别'),
+        city_a: z.string().describe('A方出生城市'),
+        name_a: z.string().optional().default("A").describe('A方姓名'),
+        is_lunar_a: z.boolean().optional().default(false).describe('A方是否为农历'),
+        is_leap_a: z.boolean().optional().default(false).describe('A方是否为闰月'),
+
+        birth_date_b: z.string().describe('B方出生日期，格式：YYYY-MM-DD'),
+        birth_time_b: z.string().describe('B方出生时间，格式：HH:mm'),
+        gender_b: z.enum(['男', '女']).describe('B方性别'),
+        city_b: z.string().describe('B方出生城市'),
+        name_b: z.string().optional().default("B").describe('B方姓名'),
+        is_lunar_b: z.boolean().optional().default(false).describe('B方是否为农历'),
+        is_leap_b: z.boolean().optional().default(false).describe('B方是否为闰月'),
+        query_year: z.number().describe('查询年份'),
+      }
+    },
+    async (args) => {
+      console.log(`大限合盘分析：${args.name_a} × ${args.name_b}，年份：${args.query_year}`);
+      const result = await analyzeDecadalSynastryByInfo(args);
+      console.log('大限合盘分析完成！');
+      return {
+        content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
+      };
+    }
+  );
+
+  // 注册流年合盘分析工具（通过输入信息）
+  server.registerTool(
+    'analyze_yearly_synastry_by_info',
+    {
+      title: '合盘分析（流年）',
+      description: '基于双方出生信息进行紫微斗数流年合盘分析，评估年度互动主题',
+      inputSchema: {
+        birth_date_a: z.string().describe('A方出生日期，格式：YYYY-MM-DD'),
+        birth_time_a: z.string().describe('A方出生时间，格式：HH:mm'),
+        gender_a: z.enum(['男', '女']).describe('A方性别'),
+        city_a: z.string().describe('A方出生城市'),
+        name_a: z.string().optional().default("A").describe('A方姓名'),
+        is_lunar_a: z.boolean().optional().default(false).describe('A方是否为农历'),
+        is_leap_a: z.boolean().optional().default(false).describe('A方是否为闰月'),
+
+        birth_date_b: z.string().describe('B方出生日期，格式：YYYY-MM-DD'),
+        birth_time_b: z.string().describe('B方出生时间，格式：HH:mm'),
+        gender_b: z.enum(['男', '女']).describe('B方性别'),
+        city_b: z.string().describe('B方出生城市'),
+        name_b: z.string().optional().default("B").describe('B方姓名'),
+        is_lunar_b: z.boolean().optional().default(false).describe('B方是否为农历'),
+        is_leap_b: z.boolean().optional().default(false).describe('B方是否为闰月'),
+        query_year: z.number().describe('查询年份'),
+      }
+    },
+    async (args) => {
+      console.log(`流年合盘分析：${args.name_a} × ${args.name_b}，年份：${args.query_year}`);
+      const result = await analyzeYearlySynastryByInfo(args);
+      console.log('流年合盘分析完成！');
+      return {
+        content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
+      };
+    }
+  );
+
+  // 注册流月合盘分析工具（通过输入信息）
+  server.registerTool(
+    'analyze_monthly_synastry_by_info',
+    {
+      title: '合盘分析（流月）',
+      description: '基于双方出生信息进行紫微斗数流月合盘分析，评估月度互动主题',
+      inputSchema: {
+        birth_date_a: z.string().describe('A方出生日期，格式：YYYY-MM-DD'),
+        birth_time_a: z.string().describe('A方出生时间，格式：HH:mm'),
+        gender_a: z.enum(['男', '女']).describe('A方性别'),
+        city_a: z.string().describe('A方出生城市'),
+        name_a: z.string().optional().default("A").describe('A方姓名'),
+        is_lunar_a: z.boolean().optional().default(false).describe('A方是否为农历'),
+        is_leap_a: z.boolean().optional().default(false).describe('A方是否为闰月'),
+
+        birth_date_b: z.string().describe('B方出生日期，格式：YYYY-MM-DD'),
+        birth_time_b: z.string().describe('B方出生时间，格式：HH:mm'),
+        gender_b: z.enum(['男', '女']).describe('B方性别'),
+        city_b: z.string().describe('B方出生城市'),
+        name_b: z.string().optional().default("B").describe('B方姓名'),
+        is_lunar_b: z.boolean().optional().default(false).describe('B方是否为农历'),
+        is_leap_b: z.boolean().optional().default(false).describe('B方是否为闰月'),
+        query_year: z.number().describe('查询年份'),
+        query_month: z.number().describe('查询月份（1-12）'),
+      }
+    },
+    async (args) => {
+      console.log(`流月合盘分析：${args.name_a} × ${args.name_b}，月份：${args.query_year}-${args.query_month}`);
+      const result = await analyzeMonthlySynastryByInfo(args);
+      console.log('流月合盘分析完成！');
+      return {
+        content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
+      };
+    }
+  );
+
+  // 注册流日合盘分析工具（通过输入信息）
+  server.registerTool(
+    'analyze_daily_synastry_by_info',
+    {
+      title: '合盘分析（流日）',
+      description: '基于双方出生信息进行紫微斗数流日合盘分析，评估每日互动主题',
+      inputSchema: {
+        birth_date_a: z.string().describe('A方出生日期，格式：YYYY-MM-DD'),
+        birth_time_a: z.string().describe('A方出生时间，格式：HH:mm'),
+        gender_a: z.enum(['男', '女']).describe('A方性别'),
+        city_a: z.string().describe('A方出生城市'),
+        name_a: z.string().optional().default("A").describe('A方姓名'),
+        is_lunar_a: z.boolean().optional().default(false).describe('A方是否为农历'),
+        is_leap_a: z.boolean().optional().default(false).describe('A方是否为闰月'),
+
+        birth_date_b: z.string().describe('B方出生日期，格式：YYYY-MM-DD'),
+        birth_time_b: z.string().describe('B方出生时间，格式：HH:mm'),
+        gender_b: z.enum(['男', '女']).describe('B方性别'),
+        city_b: z.string().describe('B方出生城市'),
+        name_b: z.string().optional().default("B").describe('B方姓名'),
+        is_lunar_b: z.boolean().optional().default(false).describe('B方是否为农历'),
+        is_leap_b: z.boolean().optional().default(false).describe('B方是否为闰月'),
+        query_year: z.number().describe('查询年份'),
+        query_month: z.number().describe('查询月份（1-12）'),
+        query_day: z.number().describe('查询日期（1-31）'),
+      }
+    },
+    async (args) => {
+      console.log(`流日合盘分析：${args.name_a} × ${args.name_b}，日期：${args.query_year}-${args.query_month}-${args.query_day}`);
+      const result = await analyzeDailySynastryByInfo(args);
+      console.log('流日合盘分析完成！');
       return {
         content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
       };

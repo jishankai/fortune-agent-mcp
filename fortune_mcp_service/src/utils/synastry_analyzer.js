@@ -1,4 +1,4 @@
-import { generateAstrolabe } from './astrolabe_helper.js';
+import { generateAstrolabe, getScopePalaces } from './astrolabe_helper.js';
 
 // 本文件重写以提升可读性与结构化，但保持对外接口与功能不变：
 // - 导出函数：synastryScore, interpretSynastryByPalace, renderSynastryText,
@@ -186,17 +186,10 @@ function triIndices(i) { return [i, opp(i), (i + 4) % 12, (i + 8) % 12]; }
 // iztro 星盘解析辅助
 // ==================
 
-function assertIztroChart(chart) {
-  if (!chart || typeof chart.palace !== 'function') {
-    throw new Error('仅支持iztro astrolabe对象，请使用generateAstrolabe()生成的星盘数据');
-  }
-}
-
 /**
  * 构建星盘映射表（仅支持iztro对象）
  */
 function buildMaps(chart) {
-  assertIztroChart(chart);
   const palStars = {};
   const palMutagen = {};
   const nameToIdx = {};
@@ -204,8 +197,7 @@ function buildMaps(chart) {
   const idxToStem = {};
 
   for (let i = 0; i < 12; i++) {
-    const palaceName = PALACE_NAMES[i];
-    const palace = chart.palace(palaceName);
+    const palace = chart[i];
     
     nameToIdx[palace.name] = palace.index;
     idxToBranch[palace.index] = palace.earthlyBranch;
@@ -241,12 +233,10 @@ function buildMaps(chart) {
  * 构建亮度映射表（仅支持iztro对象）
  */
 function buildBrightnessMap(chart) {
-  assertIztroChart(chart);
   const palBright = {};
   
   for (let i = 0; i < 12; i++) {
-    const palaceName = PALACE_NAMES[i];
-    const palace = chart.palace(palaceName);
+    const palace = chart[i];
     const mp = {};
     
     // 收集各类星曜的亮度
@@ -448,11 +438,9 @@ function getBucket(x) {
  * 紫微斗数合盘评分
  * @param {Object} chartA - A方本命盘数据
  * @param {Object} chartB - B方本命盘数据
- * @param {Object} flowA - A方运限盘（可选）
- * @param {Object} flowB - B方运限盘（可选）
  * @returns {Object} 包含各宫位评分和详细分析的字典
  */
-export function synastryScore(chartA, chartB, flowA = null, flowB = null) {
+export function synastryScore(chartA, chartB) {
   // 解析星盘（A/B）
   const { palStars: AStars, palMutagen: AMut, nameToIdx: AN2I, idxToBranch: AI2B } = buildMaps(chartA);
   const { palStars: BStars, palMutagen: BMut, idxToBranch: BI2B } = buildMaps(chartB);
@@ -479,24 +467,6 @@ export function synastryScore(chartA, chartB, flowA = null, flowB = null) {
     palaces: palaceScores,
     explanations: { palaces: palaceReasons }
   };
-
-  // 可选：动态合盘（按流年/流月/流日）
-  if (flowA && flowB) {
-    const { palStars: FAStars, palMutagen: FAMut, idxToBranch: FAI2B } = buildMaps(flowA);
-    const { palStars: FBStars, palMutagen: FBMut, idxToBranch: FBI2B } = buildMaps(flowB);
-
-    const { overlayStars: FBOnAStars, overlayMut: FBOnAMut } = overlaySameBranch(FAI2B, FBI2B, FBStars, FBMut);
-    const FABright = mapBrightnessByBranch(FAI2B, FBI2B, buildBrightnessMap(flowB));
-
-    const dynPal = {};
-    const dynExp = {};
-    for (const [pName, idx] of Object.entries(AN2I)) {
-      const { pts, reasons } = scorePalace(idx, FBOnAStars, FBOnAMut, 1.0, AI2N, FABright);
-      dynPal[pName] = pts;
-      dynExp[pName] = reasons;
-    }
-    result.dynamic = { palaces: dynPal, explanations: dynExp };
-  }
 
   return result;
 }
@@ -698,15 +668,15 @@ export async function analyzeSynastryByUserInfo({
   birth_date_b, birth_time_b, gender_b, city_b, name_b = "B",
   is_lunar_a = false, is_leap_a = false,
   is_lunar_b = false, is_leap_b = false,
+  scope,
+  query_date = null,
   min_abs_effect = 0.3,
   max_items_per_polarity = null,
   include_raw_data = false
 }) {
   try {
     console.log(`合盘分析：${name_a} × ${name_b}`);
-    
-    // 生成双方星盘
-    const chartA = await generateAstrolabe({
+    const astroA = await generateAstrolabe({
       birth_date: birth_date_a,
       time: birth_time_a,
       gender: gender_a,
@@ -714,8 +684,8 @@ export async function analyzeSynastryByUserInfo({
       is_lunar: is_lunar_a,
       is_leap: is_leap_a
     });
-    
-    const chartB = await generateAstrolabe({
+
+    const astroB = await generateAstrolabe({
       birth_date: birth_date_b,
       time: birth_time_b,
       gender: gender_b,
@@ -723,7 +693,20 @@ export async function analyzeSynastryByUserInfo({
       is_lunar: is_lunar_b,
       is_leap: is_leap_b
     });
+
+    let chartA, chartB;
     
+    // 生成双方星盘
+    if (scope === 'origin') {
+      chartA = astroA.palaces;
+      chartB = astroB.palaces;
+    } else {
+      const horoscopeA = astroA.horoscope(query_date);
+      const horoscopeB = astroB.horoscope(query_date);
+      chartA = getScopePalaces(horoscopeA, scope);
+      chartB = getScopePalaces(horoscopeB, scope);
+    }
+
     // 执行合盘分析
     const result = analyzeSynastry(chartA, chartB, name_a, name_b, {
       minAbsEffect: min_abs_effect,
@@ -760,8 +743,6 @@ export async function analyzeSynastryByUserInfo({
  */
 export function analyzeSynastry(chartA, chartB, nameA = "A", nameB = "B", options = {}) {
   const {
-    flowA = null,
-    flowB = null,
     minAbsEffect = 0.3,
     maxItemsPerPolarity = null,
     includeRawData = false
@@ -769,7 +750,7 @@ export function analyzeSynastry(chartA, chartB, nameA = "A", nameB = "B", option
   
   try {
     // 1. 计算合盘评分
-    const synResult = synastryScore(chartA, chartB, flowA, flowB);
+    const synResult = synastryScore(chartA, chartB);
     
     // 2. 解释分析
     const interpResult = interpretSynastryByPalace(synResult, minAbsEffect, maxItemsPerPolarity);
@@ -786,7 +767,6 @@ export function analyzeSynastry(chartA, chartB, nameA = "A", nameB = "B", option
       palaces: textResult.palaces,
       metadata: {
         analysis_time: new Date().toISOString(),
-        has_dynamic: !!(flowA && flowB),
         min_effect_threshold: minAbsEffect
       }
     };

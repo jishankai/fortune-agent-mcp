@@ -2,11 +2,10 @@
   "name": "fortune-mcp-service",
   "version": "1.0.0",
   "description": "紫微斗数星盘计算 MCP 服务",
-  "main": "src/stdio-server.js",
+  "main": "src/http-server.js",
   "type": "module",
   "scripts": {
     "start": "node src/http-server.js",
-    "start:stdio": "node src/stdio-server.js",
     "dev": "node --watch src/http-server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

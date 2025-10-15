@@ -34,6 +34,10 @@ function scopeMapping(scope) {
 }
 
 const MUTAGENS_MAPPING = ['禄', '权', '科', '忌'];
+const FALLBACK_PALACE_NAMES = [
+  '命宫', '兄弟', '夫妻', '子女', '财帛', '疾厄',
+  '迁移', '仆役', '官禄', '田宅', '福德', '父母'
+];
 
 /**
  * 计算时辰索引
@@ -227,6 +231,27 @@ export function formatPalace(palace, horoscope = {}, scope = 'origin') {
     }, []) || [];
   }
   return ret;
+}
+
+/**
+ * 获取指定运限范围内的十二宫信息数组
+ * @param {Object} horoscope - 由 astrolabe.horoscope(...) 获取的运限对象
+ * @param {string} scope - 运限范围（decadal/yearly/monthly/daily 等）
+ * @returns {Array<Object>} 该运限下的十二宫格式化结果
+ */
+export function getScopePalaces(horoscope, scope) {
+  if (!horoscope || typeof horoscope.palace !== 'function') {
+    throw new Error('无效的运限对象：缺少宫位查询能力');
+  }
+
+  return horoscope[scope].palaceNames.map(name => {
+    const palace = horoscope.palace(name, scope);
+    if (!palace) {
+      throw new Error(`未能获取「${name}」的运限宫位信息`);
+    }
+    palace.name = horoscope[scope].palaceNames[palace.index]
+    return palace;
+  });
 }
 
 /**
