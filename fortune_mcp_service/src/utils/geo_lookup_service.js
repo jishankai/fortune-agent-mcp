@@ -1,3 +1,6 @@
+import { createRequire } from 'module';
+import { logger } from './logger.js';
+
 /**
  * 地理位置查询服务
  * 实现中文地址到经纬度坐标的转换
@@ -1551,6 +1554,9 @@ export class GeoLookupService {
     this.allRegions = { ...CHINA_REGIONS, ...OVERSEAS_CHINESE_REGIONS };
     this.historicalNames = HISTORICAL_NAMES;
     this.countryAliases = COUNTRY_ALIASES;
+    this.cityExactMap = new Map();
+    this.cityBuckets = new Map();
+    this.allCityRecords = [];
 
     // 可选：尝试加载 all-the-cities 作为补充（未安装时忽略）
     this._require = createRequire(import.meta.url);
@@ -1558,16 +1564,51 @@ export class GeoLookupService {
     // all-the-cities 为 CJS 包，使用 require 同步加载
     try {
       this.allCities = this._require('all-the-cities');
+      this.buildCityIndexes();
     } catch (e) {
       throw new Error('缺少依赖 all-the-cities，请运行 npm i all-the-cities 安装后重试');
     }
 
     // 启动日志：打印全局城市数据加载情况
     try {
-      const count = Array.isArray(this.allCities) ? this.allCities.length : 0;
-      console.info(`[GeoLookup] all-the-cities 已加载：${count} 个城市（全球补充数据源）`);
+      const count = this.allCityRecords.length;
+      logger.info(`[GeoLookup] all-the-cities 已加载：${count} 个城市（全球补充数据源）`);
     } catch (_) {
       /* noop */
+    }
+  }
+
+  buildCityIndexes() {
+    if (!Array.isArray(this.allCities)) {
+      return;
+    }
+    this.allCityRecords = [];
+    this.cityExactMap.clear();
+    this.cityBuckets.clear();
+
+    for (const rec of this.allCities) {
+      const matchNames = [rec.name, rec.name_ascii, rec.adminName]
+        .filter(Boolean)
+        .map((value) => this.sanitizeForMatch(String(value)))
+        .filter(Boolean);
+
+      const indexedRecord = { ...rec, _matchNames: matchNames };
+      this.allCityRecords.push(indexedRecord);
+
+      const uniqueKeys = new Set(matchNames);
+      uniqueKeys.forEach((key) => {
+        if (!key) return;
+        if (!this.cityExactMap.has(key)) {
+          this.cityExactMap.set(key, []);
+        }
+        this.cityExactMap.get(key).push(indexedRecord);
+
+        const bucketKey = key.slice(0, 2) || key;
+        if (!this.cityBuckets.has(bucketKey)) {
+          this.cityBuckets.set(bucketKey, []);
+        }
+        this.cityBuckets.get(bucketKey).push(indexedRecord);
+      });
     }
   }
 
@@ -1934,11 +1975,12 @@ export class GeoLookupService {
    */
   allCitiesMatch(address) {
     try {
-      if (!this.allCities || !Array.isArray(this.allCities)) return null;
+      if (!this.allCityRecords.length) return null;
+
       const addrLower = address.toLowerCase();
       const addrKey = this.sanitizeForMatch(address);
+      if (!addrKey) return null;
 
-      // 识别国家（英文别名），保留英文 alias 以便与数据国家名匹配
       let matchedCountryCn = null;
       let matchedCountryAliasEn = null;
       for (const [aliasEn, cn] of Object.entries(this.countryAliases || {})) {
@@ -1949,36 +1991,35 @@ export class GeoLookupService {
         }
       }
 
-      // 基于分隔抽取城市 token
-      const parts = address.split(/[,，]/).map(s => s.trim()).filter(Boolean);
+      const parts = address.split(/[,，]/).map((s) => s.trim()).filter(Boolean);
       let cityToken = parts.length > 0 ? parts[0] : address;
-      // 如果第一个 token 看起来是国家名，则使用第二个 token
       if (parts.length > 1 && matchedCountryAliasEn && parts[0].toLowerCase().includes(matchedCountryAliasEn)) {
         cityToken = parts[1];
       }
       const cityKey = this.sanitizeForMatch(cityToken);
+      if (!cityKey) return null;
+
+      const candidates = this.lookupCityCandidates(cityKey);
+      if (!candidates.length) return null;
 
       let best = null;
       let bestScore = 0;
 
-      for (const rec of this.allCities) {
-        const names = [rec.name, rec.name_ascii, rec.adminName].filter(Boolean);
-        // 名称匹配评分
+      for (const rec of candidates) {
+        const names = rec._matchNames || [];
         let localScore = 0;
-        for (const n of names) {
-          const nk = this.sanitizeForMatch(String(n));
-          const s = this.calculateSimilarity(cityKey, nk);
-          if (s > localScore) localScore = s;
+        for (const nk of names) {
+          const score = this.calculateSimilarity(cityKey, nk);
+          if (score > localScore) localScore = score;
         }
-        if (localScore < 0.7) continue; // 名称不够相似，跳过
+        if (localScore < 0.7) continue;
 
-        // 国家匹配提升权重
         let countryBoost = 0;
         if (matchedCountryAliasEn) {
-          const recCountryKey = this.sanitizeForMatch(String(rec.country));
           const aliasKey = this.sanitizeForMatch(matchedCountryAliasEn);
+          const recCountryKey = this.sanitizeForMatch(String(rec.country));
           if (recCountryKey === aliasKey) {
-            countryBoost = 0.15; // 增强置信
+            countryBoost = 0.15;
           } else if (rec.iso2 && this.sanitizeForMatch(rec.iso2) === aliasKey) {
             countryBoost = 0.15;
           } else if (rec.iso3 && this.sanitizeForMatch(rec.iso3) === aliasKey) {
@@ -1986,18 +2027,16 @@ export class GeoLookupService {
           }
         }
 
-        const score = Math.min(1, localScore + countryBoost);
-        if (score > bestScore) {
-          bestScore = score;
+        const totalScore = Math.min(1, localScore + countryBoost);
+        if (totalScore > bestScore) {
+          bestScore = totalScore;
           best = rec;
         }
       }
 
       if (!best) return null;
 
-      // 结果整形：国家中文优先，否则使用英文
-      let province = matchedCountryCn || best.country;
-      // standardName：国家+城市（尽量中文）
+      const province = matchedCountryCn || best.country;
       const standardName = `${province}${best.name}`;
       return {
         lat: Number(best.lat),
@@ -2013,6 +2052,31 @@ export class GeoLookupService {
     } catch (e) {
       return null;
     }
+  }
+
+  lookupCityCandidates(cityKey) {
+    if (!cityKey) {
+      return [];
+    }
+
+    const exactMatches = this.cityExactMap.get(cityKey);
+    if (exactMatches && exactMatches.length) {
+      return exactMatches;
+    }
+
+    const bucketKey = cityKey.slice(0, 2) || cityKey;
+    const bucketMatches = this.cityBuckets.get(bucketKey);
+    if (bucketMatches && bucketMatches.length) {
+      return bucketMatches;
+    }
+
+    const shortKey = cityKey.slice(0, 1);
+    const shortMatches = this.cityBuckets.get(shortKey);
+    if (shortMatches && shortMatches.length) {
+      return shortMatches;
+    }
+
+    return this.allCityRecords;
   }
 
   /**
@@ -2171,4 +2235,3 @@ export class GeoLookupService {
 
 // 导出单例实例
 export const geoLookupService = new GeoLookupService();
-import { createRequire } from 'module';

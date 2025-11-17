@@ -1,4 +1,5 @@
 import { analyzeSynastryByUserInfo } from '../utils/synastry_analyzer.js';
+import { logger } from '../utils/logger.js';
 
 /**
  * 通过输入信息进行合盘分析
@@ -17,7 +18,7 @@ export async function analyzeSynastryByInfo({
       scope: 'origin' // 目前仅支持本命盘合盘分析
     });
   } catch (error) {
-    console.error('合盘分析失败:', error);
+    logger.error('合盘分析失败:', error);
     return {
       success: false,
       error: error.message,
@@ -45,7 +46,7 @@ export async function analyzeDecadalSynastryByInfo({
       query_date
     });
   } catch (error) {
-    console.error('合盘分析失败:', error);
+    logger.error('大限合盘分析失败:', error);
     return {
       success: false,
       error: error.message,
@@ -73,7 +74,7 @@ export async function analyzeYearlySynastryByInfo({
       query_date
     });
   } catch (error) {
-    console.error('合盘分析失败:', error);
+    logger.error('流年合盘分析失败:', error);
     return {
       success: false,
       error: error.message,
@@ -101,7 +102,7 @@ export async function analyzeMonthlySynastryByInfo({
       query_date
     });
   } catch (error) {
-    console.error('合盘分析失败:', error);
+    logger.error('流月合盘分析失败:', error);
     return {
       success: false,
       error: error.message,
@@ -129,7 +130,7 @@ export async function analyzeDailySynastryByInfo({
       query_date
     });
   } catch (error) {
-    console.error('合盘分析失败:', error);
+    logger.error('流日合盘分析失败:', error);
     return {
       success: false,
       error: error.message,

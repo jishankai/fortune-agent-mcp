@@ -1,5 +1,6 @@
 import { generateAstrolabe, formatPalace, formatSurroundedPalaces, getAstrolabeBasicInfo } from '../utils/astrolabe_helper.js';
 import { detectPatterns } from '../utils/patterns.js';
+import { logger } from '../utils/logger.js';
 
 /**
  * 通用运势查询函数
@@ -16,7 +17,7 @@ function getHoroscopeData(scope, query_date, astrolabe, palace_name) {
   const result = {};
   result["星盘基本信息"] = getAstrolabeBasicInfo(astrolabe);
 
-  console.log(`查询${scope}盘，目标宫位：${palace_name}，查询日期：${query_date.toISOString().split('T')[0]}`);
+  logger.debug(`查询${scope}盘`, { palace: palace_name, date: query_date.toISOString().split('T')[0] });
   const scFormattedPalace = formatPalace(horoscope.palace(palace_name, scope), horoscope[scope], scope);
   const scSurroundedPalaces = horoscope.surroundPalaces(palace_name, scope);
   const scFormattedSurroundedPalaces = formatSurroundedPalaces(scSurroundedPalaces, horoscope[scope], scope);
@@ -85,7 +86,7 @@ export async function getHoroscope({ birth_date, birth_time, gender, city, is_lu
       time: new Date().toISOString()
     };
   } catch (error) {
-    console.error(error);
+    logger.error('大限信息查询失败', error);
     return {
       success: false,
       error: error.message,
@@ -116,7 +117,7 @@ export async function getYearlyHoroscope({ birth_date, birth_time, gender, city,
       time: new Date().toISOString()
     };
   } catch (error) {
-    console.error(error);
+    logger.error('流年信息查询失败', error);
     return {
       success: false,
       error: error.message,
@@ -147,7 +148,7 @@ export async function getMonthlyHoroscope({ birth_date, birth_time, gender, city
       time: new Date().toISOString()
     };
   } catch (error) {
-    console.error(error);
+    logger.error('流月信息查询失败', error);
     return {
       success: false,
       error: error.message,
@@ -178,7 +179,7 @@ export async function getDailyHoroscope({ birth_date, birth_time, gender, city, 
       time: new Date().toISOString()
     };
   } catch (error) {
-    console.error(error);
+    logger.error('流日信息查询失败', error);
     return {
       success: false,
       error: error.message,

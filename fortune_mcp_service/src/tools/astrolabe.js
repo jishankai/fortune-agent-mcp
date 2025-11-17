@@ -1,5 +1,6 @@
 import { generateAstrolabe, formatPalace, formatSurroundedPalaces, getAstrolabeBasicInfo } from '../utils/astrolabe_helper.js';
 import { detectPatterns } from '../utils/patterns.js';
+import { logger } from '../utils/logger.js';
 
 /**
  * 获取宫位基本信息
@@ -39,7 +40,7 @@ export async function getPalace({ birth_date, birth_time, gender, city, palace_n
     };
     
   } catch (error) {
-    console.error('宫位基本信息查询失败:', error);
+    logger.error('宫位基本信息查询失败:', error);
     return {
       success: false,
       error: error.message,

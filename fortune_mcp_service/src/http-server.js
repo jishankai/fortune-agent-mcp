@@ -6,6 +6,7 @@ import { randomUUID } from 'node:crypto';
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
 import { isInitializeRequest } from '@modelcontextprotocol/sdk/types.js';
 import { createMcpServer } from './mcp-service.js';
+import { logger, isDebugEnabled } from './utils/logger.js';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -21,7 +22,7 @@ app.use(cors({
 app.use(express.json({ 
   limit: '50mb',
   verify: (req, res, buf) => {
-    console.log(`原始Buffer大小: ${buf.length} 字节`);
+    logger.debug(`原始Buffer大小: ${buf.length} 字节`);
   }
 }));
 
@@ -33,7 +34,7 @@ setInterval(() => {
   const now = Date.now();
   Object.entries(transports).forEach(([sessionId, transport]) => {
     if (transport.lastActivity && now - transport.lastActivity > 30 * 60 * 1000) { // 30分钟超时
-      console.log(`清理超时会话: ${sessionId}`);
+      logger.debug(`清理超时会话: ${sessionId}`);
       transport.close();
       delete transports[sessionId];
     }
@@ -43,31 +44,32 @@ setInterval(() => {
 // 处理 MCP 协议的 POST 请求
 app.post('/mcp', async (req, res) => {
   try {
-    // 调试原始请求
-    const bodySize = JSON.stringify(req.body).length;
-    console.log(`=== HTTP请求调试 ===`);
-    console.log(`Content-Length: ${req.headers['content-length']}`);
-    console.log(`Body大小: ${bodySize} 字符`);
-    
-    if (req.body && req.body.params && req.body.params.arguments) {
-      const args = req.body.params.arguments;
-      console.log(`Method: ${req.body.method}`);
-      console.log(`Arguments keys: ${Object.keys(args)}`);
+    if (isDebugEnabled) {
+      const bodySize = JSON.stringify(req.body).length;
+      logger.debug('=== HTTP请求调试 ===');
+      logger.debug(`Content-Length: ${req.headers['content-length']}`);
+      logger.debug(`Body大小: ${bodySize} 字符`);
       
-      if (args.astrolabe_data) {
-        const astrolabeSize = JSON.stringify(args.astrolabe_data).length;
-        console.log(`astrolabe_data大小: ${astrolabeSize} 字符`);
-        console.log(`astrolabe_data keys: ${Object.keys(args.astrolabe_data)}`);
+      if (req.body && req.body.params && req.body.params.arguments) {
+        const args = req.body.params.arguments;
+        logger.debug(`Method: ${req.body.method}`);
+        logger.debug(`Arguments keys: ${Object.keys(args)}`);
         
-        if (args.astrolabe_data.palace_data) {
-          console.log(`palace_data长度: ${args.astrolabe_data.palace_data.length}`);
-          const firstPalace = args.astrolabe_data.palace_data[0];
-          console.log(`第一个宫位keys: ${Object.keys(firstPalace || {})}`)
-          console.log(`第一个宫位数据大小: ${JSON.stringify(firstPalace || {}).length} 字符`);
+        if (args.astrolabe_data) {
+          const astrolabeSize = JSON.stringify(args.astrolabe_data).length;
+          logger.debug(`astrolabe_data大小: ${astrolabeSize} 字符`);
+          logger.debug(`astrolabe_data keys: ${Object.keys(args.astrolabe_data)}`);
+          
+          if (args.astrolabe_data.palace_data) {
+            logger.debug(`palace_data长度: ${args.astrolabe_data.palace_data.length}`);
+            const firstPalace = args.astrolabe_data.palace_data[0];
+            logger.debug(`第一个宫位keys: ${Object.keys(firstPalace || {})}`);
+            logger.debug(`第一个宫位数据大小: ${JSON.stringify(firstPalace || {}).length} 字符`);
+          }
         }
       }
+      logger.debug('=== HTTP请求调试结束 ===');
     }
-    console.log(`=== HTTP请求调试结束 ===`);
 
     // 检查现有会话ID
     const sessionId = req.headers['mcp-session-id'];
@@ -82,7 +84,7 @@ app.post('/mcp', async (req, res) => {
       transport = new StreamableHTTPServerTransport({
         sessionIdGenerator: () => randomUUID(),
         onsessioninitialized: (newSessionId) => {
-          console.log(`新会话初始化: ${newSessionId}`);
+          logger.info(`新会话初始化: ${newSessionId}`);
           transports[newSessionId] = transport;
           transport.lastActivity = Date.now();
         },
@@ -94,7 +96,7 @@ app.post('/mcp', async (req, res) => {
       // 会话关闭时清理
       transport.onclose = () => {
         if (transport.sessionId) {
-          console.log(`会话关闭: ${transport.sessionId}`);
+          logger.info(`会话关闭: ${transport.sessionId}`);
           delete transports[transport.sessionId];
         }
       };
@@ -117,7 +119,7 @@ app.post('/mcp', async (req, res) => {
     // 处理请求
     await transport.handleRequest(req, res, req.body);
   } catch (error) {
-    console.error('MCP 请求处理错误:', error);
+    logger.error('MCP 请求处理错误:', error);
     if (!res.headersSent) {
       res.status(500).json({
         jsonrpc: '2.0',
@@ -180,7 +182,7 @@ app.get('/', (req, res) => {
 
 // 错误处理中间件
 app.use((err, req, res, next) => {
-  console.error('服务器错误:', err);
+  logger.error('服务器错误:', err);
   res.status(500).json({
     error: 'Internal Server Error',
     message: process.env.NODE_ENV === 'development' ? err.message : 'Something went wrong'
@@ -189,21 +191,21 @@ app.use((err, req, res, next) => {
 
 // 启动服务器
 app.listen(port, () => {
-  console.log(`🚀 Fortune MCP HTTP 服务已启动`);
-  console.log(`📡 服务地址: http://localhost:${port}`);
-  console.log(`🏥 健康检查: http://localhost:${port}/health`);
-  console.log(`🔗 MCP 端点: http://localhost:${port}/mcp`);
+  logger.info(`🚀 Fortune MCP HTTP 服务已启动`);
+  logger.info(`📡 服务地址: http://localhost:${port}`);
+  logger.info(`🏥 健康检查: http://localhost:${port}/health`);
+  logger.info(`🔗 MCP 端点: http://localhost:${port}/mcp`);
 });
 
 // 优雅关闭
 process.on('SIGTERM', () => {
-  console.log('收到 SIGTERM 信号，正在关闭服务器...');
+  logger.warn('收到 SIGTERM 信号，正在关闭服务器...');
   Object.values(transports).forEach(transport => transport.close());
   process.exit(0);
 });
 
 process.on('SIGINT', () => {
-  console.log('收到 SIGINT 信号，正在关闭服务器...');
+  logger.warn('收到 SIGINT 信号，正在关闭服务器...');
   Object.values(transports).forEach(transport => transport.close());
   process.exit(0);
 });

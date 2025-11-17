@@ -1,4 +1,5 @@
 import { generateAstrolabe, getScopePalaces } from './astrolabe_helper.js';
+import { logger } from './logger.js';
 
 // 本文件重写以提升可读性与结构化，但保持对外接口与功能不变：
 // - 导出函数：synastryScore, interpretSynastryByPalace, renderSynastryText,
@@ -675,7 +676,7 @@ export async function analyzeSynastryByUserInfo({
   include_raw_data = false
 }) {
   try {
-    console.log(`合盘分析：${name_a} × ${name_b}`);
+    logger.debug('合盘分析计算开始', { scope });
     const astroA = await generateAstrolabe({
       birth_date: birth_date_a,
       time: birth_time_a,
@@ -722,7 +723,7 @@ export async function analyzeSynastryByUserInfo({
     };
     
   } catch (error) {
-    console.error('合盘分析失败:', error);
+    logger.error('合盘分析失败:', error);
     return {
       success: false,
       error: error.message,

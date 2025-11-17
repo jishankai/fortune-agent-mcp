@@ -1,6 +1,10 @@
 import { geoLookupService } from './geo_lookup_service.js';
 import { solarTimeCalculator } from './solar_time_calculator.js';
 
+let astroClient;
+const ASTROLABE_CACHE = new Map();
+const MAX_ASTROLABE_CACHE_SIZE = 100;
+
 /**
  * 星曜类型中文映射
  * @param {string} type - 英文星曜类型
@@ -38,6 +42,74 @@ const FALLBACK_PALACE_NAMES = [
   '命宫', '兄弟', '夫妻', '子女', '财帛', '疾厄',
   '迁移', '仆役', '官禄', '田宅', '福德', '父母'
 ];
+
+async function getAstroClient() {
+  if (!astroClient) {
+    const { astro } = await import('iztro');
+    astro.config({ yearDivide: 'normal' });
+    astroClient = astro;
+  }
+  return astroClient;
+}
+
+function ensureCacheLimit() {
+  if (ASTROLABE_CACHE.size <= MAX_ASTROLABE_CACHE_SIZE) {
+    return;
+  }
+  const oldestKey = ASTROLABE_CACHE.keys().next().value;
+  if (oldestKey) {
+    ASTROLABE_CACHE.delete(oldestKey);
+  }
+}
+
+function getAstrolabeCacheKey({ birth_date, birth_time, gender, city, is_lunar, is_leap }) {
+  return [
+    birth_date,
+    birth_time,
+    gender,
+    city,
+    is_lunar ? 1 : 0,
+    is_leap ? 1 : 0
+  ].join('|');
+}
+
+function getCachedAstrolabe(cacheKey) {
+  const cached = ASTROLABE_CACHE.get(cacheKey);
+  if (!cached) return null;
+  ASTROLABE_CACHE.delete(cacheKey);
+  ASTROLABE_CACHE.set(cacheKey, cached);
+  return cached;
+}
+
+function setCachedAstrolabe(cacheKey, value) {
+  ASTROLABE_CACHE.set(cacheKey, value);
+  ensureCacheLimit();
+}
+
+function resolveCoordinates(city) {
+  const locationResult = geoLookupService.lookupAddress(city);
+  if (!locationResult.success) {
+    throw new Error(`城市查询失败: ${locationResult.error}`);
+  }
+  return {
+    lat: locationResult.data.latitude,
+    lng: locationResult.data.longitude
+  };
+}
+
+function computeTrueSolarTime(dateParts, hour, minute, coordinates) {
+  const solarTimeResult = solarTimeCalculator.getSolarTime({
+    dateTime: { ...dateParts, hour, minute, second: 0 },
+    longitude: coordinates.lng,
+    latitude: coordinates.lat
+  });
+
+  if (!solarTimeResult.success) {
+    throw new Error(`真太阳时计算失败: ${solarTimeResult.error}`);
+  }
+
+  return solarTimeResult.data.trueSolarTime;
+}
 
 /**
  * 计算时辰索引
@@ -79,76 +151,38 @@ function getTimeIndex(hour, minute) {
  */
 export async function generateAstrolabe({ birth_date, time, gender, city, is_lunar = false, is_leap = false }) {
   try {
-    const { astro } = await import('iztro');
-    astro.config({ yearDivide: 'normal' });
-    const [hour, minute] = time.split(':').map(Number);
-    
-    // 检查必需参数
     if (!city) {
       throw new Error('城市参数为必填项');
     }
-    
-    // 获取城市坐标
-    const locationResult = geoLookupService.lookupAddress(city);
-    
-    if (!locationResult.success) {
-      throw new Error(`城市查询失败: ${locationResult.error}`);
+
+    const cacheKey = getAstrolabeCacheKey({ birth_date, birth_time: time, gender, city, is_lunar, is_leap });
+    const cached = getCachedAstrolabe(cacheKey);
+    if (cached) {
+      return cached;
     }
-    
-    const coordinates = {
-      lat: locationResult.data.latitude,
-      lng: locationResult.data.longitude
-    };
-    
-    let astrolabe;
-    let solarTimeResult;
-    
+
+    const astro = await getAstroClient();
+    const [hour, minute] = time.split(':').map(Number);
+    const coordinates = resolveCoordinates(city);
+
+    let dateParts;
     if (is_lunar) {
-      // 农历处理：先获取对应的阳历日期
       const tempAstrolabe = astro.byLunar(birth_date, 0, gender, is_leap, true, 'zh-CN');
-      const solarDate = tempAstrolabe.solarDate;
-      const [year, month, day] = solarDate.split('-').map(Number);
-      
-      // 基于阳历日期计算真太阳时
-      solarTimeResult = solarTimeCalculator.getSolarTime({
-        dateTime: { year, month, day, hour, minute, second: 0 },
-        longitude: coordinates.lng,
-        latitude: coordinates.lat
-      });
-      
-      if (!solarTimeResult.success) {
-        throw new Error(`真太阳时计算失败: ${solarTimeResult.error}`);
-      }
-      
-      // 使用真太阳时计算时辰
-      const trueSolarTime = solarTimeResult.data.trueSolarTime;
-      const timeIndex = getTimeIndex(trueSolarTime.hour, trueSolarTime.minute);
-      
-      // 使用修正后的时辰重新生成农历星盘
-      astrolabe = astro.byLunar(birth_date, timeIndex, gender, is_leap, true, 'zh-CN');
+      const [year, month, day] = tempAstrolabe.solarDate.split('-').map(Number);
+      dateParts = { year, month, day };
     } else {
-      // 阳历处理
       const [year, month, day] = birth_date.split('-').map(Number);
-      
-      // 计算真太阳时
-      solarTimeResult = solarTimeCalculator.getSolarTime({
-        dateTime: { year, month, day, hour, minute, second: 0 },
-        longitude: coordinates.lng,
-        latitude: coordinates.lat
-      });
-      
-      if (!solarTimeResult.success) {
-        throw new Error(`真太阳时计算失败: ${solarTimeResult.error}`);
-      }
-      
-      // 使用真太阳时计算时辰
-      const trueSolarTime = solarTimeResult.data.trueSolarTime;
-      const timeIndex = getTimeIndex(trueSolarTime.hour, trueSolarTime.minute);
-      
-      // 生成阳历星盘
-      astrolabe = astro.bySolar(birth_date, timeIndex, gender, is_leap, 'zh-CN');
+      dateParts = { year, month, day };
     }
-    
+
+    const trueSolarTime = computeTrueSolarTime(dateParts, hour, minute, coordinates);
+    const timeIndex = getTimeIndex(trueSolarTime.hour, trueSolarTime.minute);
+
+    const astrolabe = is_lunar
+      ? astro.byLunar(birth_date, timeIndex, gender, is_leap, true, 'zh-CN')
+      : astro.bySolar(birth_date, timeIndex, gender, is_leap, 'zh-CN');
+
+    setCachedAstrolabe(cacheKey, astrolabe);
     return astrolabe;
   } catch (error) {
     throw new Error(`星盘生成失败: ${error.message}`);
@@ -159,7 +193,6 @@ export async function generateAstrolabe({ birth_date, time, gender, city, is_lun
  * 格式化宫位的通用函数
  */
 export function formatPalace(palace, horoscope = {}, scope = 'origin') {
-  console.log(horoscope);
   const ret = {
     "宫位索引": palace.index,
     "宫位名称": horoscope?.palaceNames?.[palace.index] || palace.name,
